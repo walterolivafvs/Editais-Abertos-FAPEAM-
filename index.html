@@ -60,8 +60,20 @@
       place-items:center;
       overflow:hidden;
       border: 1px solid rgba(255,255,255,.25);
+      position: relative;
     }
-    .logoBox img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .logoBox img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .logoBox svg{
+      position:absolute;
+      inset:0;
+      margin:auto;
+      display:none; /* só aparece se logo.png falhar */
+    }
+
     .brandText h1{
       margin:0;
       font-size: 18px;
@@ -304,11 +316,8 @@
       <div class="brandRow">
         <div class="brandLeft">
           <div class="logoBox" title="Logo FVS-RCP">
-            <!-- OPÇÃO 1: Substituir por uma imagem real (logo.png) -->
-             <img src="logo.png" alt="FVS-RCP">
-
-            <!-- OPÇÃO 2: Logo provisória (SVG) -->
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-label="Logo">
+            <img id="logoImg" src="logo.png" alt="FVS-RCP" onerror="document.getElementById('logoSvg').style.display='block'; this.style.display='none';">
+            <svg id="logoSvg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-label="Logo">
               <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z" stroke="white" stroke-width="1.8" opacity=".95"/>
               <path d="M8 12h8M8 15h8M8 9h8" stroke="white" stroke-width="1.8" opacity=".95"/>
             </svg>
@@ -392,42 +401,15 @@
 <script>
 /**
  * ============================
- * 1) EDITE AQUI OS EDITAIS
+ * DADOS (lidos do data.json)
  * ============================
- * Campos:
- * - titulo: texto que aparece
- * - url: link
- * - data: "YYYY-MM-DD" (ex: 2026-02-04)
- * - area: ex: "Pesquisa", "Inovação", "Eventos", "Interiorização"
- * - tipo: ex: "Chamada", "Programa", "Edital"
+ * O arquivo data.json deve estar na mesma pasta do index.html (raiz do repo).
  */
-const EDITAIS = [
-  {
-    titulo: "Processo eleitoral – Câmaras de Assessoramento Científico (biênio 2026–2028)",
-    url: "https://www.fapeam.am.gov.br/editais/edital-n-o-0012026-processo-eleitoral-das-camaras-de-assessoramento-cientifico-da-fapeam-bienio-2026-a-2028/",
-    data: "2026-02-04",
-    area: "Gestão Científica",
-    tipo: "Edital"
-  },
-  {
-    titulo: "Programa de apoio à popularização da ciência, tecnologia e inovação (POP-CTI)",
-    url: "https://www.fapeam.am.gov.br/editais/edital-n-o-0022026-programa-de-apoio-a-popularizacao-da-ciencia-tecnologia-e-inovacao-pop-cti/",
-    data: "2026-02-04",
-    area: "Popularização",
-    tipo: "Programa"
-  },
-  {
-    titulo: "Apoio à realização de eventos científicos e tecnológicos no Estado do Amazonas (PAREV 2026)",
-    url: "https://www.fapeam.am.gov.br/editais/edital-n-o-0032026-programa-de-apoio-a-realizacao-de-eventos-cientificos-e-tecnologicos-no-estado-do-amazonas-parev-2026-chamadas-i-e-ii/",
-    data: "2026-02-04",
-    area: "Eventos",
-    tipo: "Programa"
-  }
-];
+const DATA_URL = "./data.json";
 
-// Atualize aqui se quiser:
-const DATA_ATUALIZACAO_TEXTO = "04/02/2026";
-const FONTE_URL = "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos";
+let EDITAIS = [];                 // vai ser preenchido pelo data.json
+let DATA_ATUALIZACAO_TEXTO = "--/--/----";
+let FONTE_URL = "https://www.fapeam.am.gov.br/editais/";
 
 /* ============================
    UTILIDADES
@@ -440,11 +422,36 @@ function norm(s){
 function formatBR(yyyy_mm_dd){
   if(!yyyy_mm_dd) return "";
   const [y,m,d] = yyyy_mm_dd.split("-");
+  if(!y || !m || !d) return "";
   return `${d}/${m}/${y}`;
 }
 
 function uniqueSorted(arr){
   return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+}
+
+/* ============================
+   CARREGAR data.json
+============================ */
+async function carregarDados(){
+  const res = await fetch(DATA_URL, { cache: "no-store" });
+  if(!res.ok) throw new Error("Falha ao carregar data.json (HTTP " + res.status + ")");
+
+  const data = await res.json();
+
+  // Atualização e fonte (para pills/rodapé)
+  const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
+  DATA_ATUALIZACAO_TEXTO = updated;
+  FONTE_URL = data.source || FONTE_URL;
+
+  // Converte items -> formato do painel
+  EDITAIS = (data.items || []).map(it => ({
+    titulo: it.title || "(sem título)",
+    url: it.url || "#",
+    data: it.date || "",
+    area: it.area || "Geral",
+    tipo: it.type || "Edital"
+  }));
 }
 
 /* ============================
@@ -502,7 +509,7 @@ function filtrar(){
   });
 }
 
-/* Agrupa por: Data > Área > Tipo (portal institucional) */
+/* Agrupa por: Data > Área > Tipo */
 function agrupar(lista){
   const tree = {};
   for(const e of lista){
@@ -546,13 +553,12 @@ function render(){
 
   const tree = agrupar(filtrados);
 
-  // ordenar datas em bloco (sempre desc visualmente, estilo “painel”)
+  // ordenar datas
   const datas = Object.keys(tree).sort((a,b)=> (b||"").localeCompare(a||""));
 
   let globalIndex = 1;
 
   for(const d of datas){
-    // seção por data
     const sec = document.createElement("div");
     sec.className = "section";
 
@@ -567,12 +573,12 @@ function render(){
       </div>
     `;
 
-    // dentro da data: áreas
+    // áreas
     const areas = Object.keys(tree[d]).sort((a,b)=>a.localeCompare(b,"pt-BR"));
 
     for(const a of areas){
       const subHeader = document.createElement("div");
-      ssubHeader.style.margin = "10px 0 6px 0";
+      subHeader.style.margin = "10px 0 6px 0";  /* <<< corrigido (era ssubHeader) */
       subHeader.innerHTML = `
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <span class="tag">Área: ${a}</span>
@@ -641,9 +647,17 @@ function limparFiltros(){
   render();
 }
 
-/* init */
-preencherSelects();
-render();
+/* init (agora é async porque carrega o data.json) */
+(async function init(){
+  try{
+    await carregarDados();
+  }catch(e){
+    console.error(e);
+    alert("Erro ao carregar data.json. Verifique se ele está publicado na raiz do GitHub Pages.");
+  }
+  preencherSelects();
+  render();
+})();
 </script>
 
 </body>
