@@ -1,5 +1,20 @@
 {
-  "updated_at": null,
-  "source": "https://www.fapeam.am.gov.br/editais/",
-  "items": []
+  "updated_at": "2026-02-04",
+  "source": "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos",
+  "items": [
+    {
+      "title": "Edital nº 001/2026 – Processo Eleitoral FAPEAM",
+      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0012026-processo-eleitoral-das-camaras-de-assessoramento-cientifico-da-fapeam-bienio-2026-a-2028/",
+      "area": "Gestão",
+      "type": "Eleitoral",
+      "date": "2026-01-10"
+    },
+    {
+      "title": "Edital nº 002/2026 – POP CT&I",
+      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0022026-programa-de-apoio-a-popularizacao-da-ciencia-tecnologia-e-inovacao-pop-cti/",
+      "area": "Pesquisa",
+      "type": "Fomento",
+      "date": "2026-01-15"
+    }
+  ]
 }
