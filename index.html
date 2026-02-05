@@ -316,7 +316,8 @@
       <div class="brandRow">
         <div class="brandLeft">
           <div class="logoBox" title="Logo FVS-RCP">
-            <img id="logoImg" src="logo.png" alt="FVS-RCP" onerror="document.getElementById('logoSvg').style.display='block'; this.style.display='none';">
+            <img id="logoImg" src="logo.png" alt="FVS-RCP"
+                 onerror="document.getElementById('logoSvg').style.display='block'; this.style.display='none';">
             <svg id="logoSvg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-label="Logo">
               <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z" stroke="white" stroke-width="1.8" opacity=".95"/>
               <path d="M8 12h8M8 15h8M8 9h8" stroke="white" stroke-width="1.8" opacity=".95"/>
@@ -407,7 +408,7 @@
  */
 const DATA_URL = "./data.json";
 
-let EDITAIS = [];                 // vai ser preenchido pelo data.json
+let EDITAIS = [];                 // preenchido pelo data.json
 let DATA_ATUALIZACAO_TEXTO = "--/--/----";
 let FONTE_URL = "https://www.fapeam.am.gov.br/editais/";
 
@@ -421,7 +422,9 @@ function norm(s){
 
 function formatBR(yyyy_mm_dd){
   if(!yyyy_mm_dd) return "";
-  const [y,m,d] = yyyy_mm_dd.split("-");
+  const parts = (yyyy_mm_dd || "").split("-");
+  if(parts.length !== 3) return "";
+  const [y,m,d] = parts;
   if(!y || !m || !d) return "";
   return `${d}/${m}/${y}`;
 }
@@ -439,18 +442,19 @@ async function carregarDados(){
 
   const data = await res.json();
 
-  // Atualização e fonte (para pills/rodapé)
-  const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
-  DATA_ATUALIZACAO_TEXTO = updated;
+  // Atualização e fonte (pills/rodapé)
+  DATA_ATUALIZACAO_TEXTO = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
   FONTE_URL = data.source || FONTE_URL;
 
-  // Converte items -> formato do painel
+  // items -> formato do painel
   EDITAIS = (data.items || []).map(it => ({
     titulo: it.title || "(sem título)",
     url: it.url || "#",
     data: it.date || "",
     area: it.area || "Geral",
-    tipo: it.type || "Edital"
+    tipo: it.type || "Edital",
+    start_date: it.start_date || "",
+    end_date: it.end_date || ""
   }));
 }
 
@@ -553,7 +557,7 @@ function render(){
 
   const tree = agrupar(filtrados);
 
-  // ordenar datas
+  // ordenar datas (desc)
   const datas = Object.keys(tree).sort((a,b)=> (b||"").localeCompare(a||""));
 
   let globalIndex = 1;
@@ -578,7 +582,7 @@ function render(){
 
     for(const a of areas){
       const subHeader = document.createElement("div");
-      subHeader.style.margin = "10px 0 6px 0";  /* <<< corrigido (era ssubHeader) */
+      subHeader.style.margin = "10px 0 6px 0";
       subHeader.innerHTML = `
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
           <span class="tag">Área: ${a}</span>
@@ -604,6 +608,10 @@ function render(){
         for(const e of tree[d][a][t]){
           const item = document.createElement("div");
           item.className = "item";
+
+          const inicioTag = e.start_date ? `<span class="tag">Início: ${formatBR(e.start_date)}</span>` : "";
+          const fimTag = e.end_date ? `<span class="tag">Encerr.: ${formatBR(e.end_date)}</span>` : "";
+
           item.innerHTML = `
             <div class="badge">${globalIndex}</div>
             <div class="meta">
@@ -611,6 +619,8 @@ function render(){
                 <span class="tag">${formatBR(e.data)}</span>
                 <span class="tag">${e.area}</span>
                 <span class="tag">${e.tipo}</span>
+                ${inicioTag}
+                ${fimTag}
               </div>
               <div class="title">
                 <a href="${e.url}" target="_blank" rel="noopener noreferrer">${e.titulo}</a>
@@ -647,7 +657,7 @@ function limparFiltros(){
   render();
 }
 
-/* init (agora é async porque carrega o data.json) */
+/* init (async, carrega data.json) */
 (async function init(){
   try{
     await carregarDados();
