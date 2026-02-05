@@ -1,9 +1,9 @@
 name: Update data.json (FAPEAM)
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
   schedule:
-    # Toda segunda-feira às 09:00 UTC (≈ 05:00 em Manaus)
+    # Toda segunda-feira às 09:00 UTC (05:00 em Manaus)
     - cron: "0 9 * * 1"
 
 permissions:
@@ -27,18 +27,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pypdf
 
-      - name: Run scraper
-        shell: bash
+      - name: Run scraper (with retry protection)
         run: |
-          set -e
-
-          echo "Rodando scraper com tentativas para evitar erro temporário de rede/DNS..."
-
+          echo "Running FAPEAM scraper..."
           for i in 1 2 3 4 5; do
-            echo "Tentativa $i de 5"
             python scripts/scrape_fapeam.py && break
-            echo "Falhou. Aguardando 20 segundos..."
-            sleep 20
+            echo "Attempt $i failed. Waiting 15 seconds..."
+            sleep 15
           done
 
       - name: Commit and push if changed
@@ -46,10 +41,10 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          if git status --porcelain | grep .; then
+          if [[ `git status --porcelain` ]]; then
             git add data.json
             git commit -m "Atualização automática do data.json (FAPEAM)"
             git push
           else
-            echo "Nenhuma alteração detectada no data.json"
+            echo "No changes to commit"
           fi
