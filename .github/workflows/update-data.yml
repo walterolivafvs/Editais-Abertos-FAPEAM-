@@ -26,9 +26,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pypdf
 
-      - name: Run scraper
-        run: |
-          python scripts/scrape_fapeam.py
+      - name: Run scraper (with retry)
+  run: |
+    for i in 1 2 3; do
+      python scripts/scrape_fapeam.py && break
+      echo "Tentativa $i falhou. Aguardando..."
+      sleep $((i*20))
+    done
 
       - name: Commit and push if changed
         run: |
