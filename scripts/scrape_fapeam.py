@@ -3,7 +3,6 @@
 
 import re
 import json
-import time
 import unicodedata
 from datetime import datetime
 from urllib.parse import urljoin
@@ -12,7 +11,6 @@ import requests
 from bs4 import BeautifulSoup
 from pypdf import PdfReader
 
-
 BASE_LIST_URL = "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos"
 OUT_JSON = "data.json"
 
@@ -20,9 +18,10 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (GitHub Actions) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari"
 }
 
-DATE_RE = re.compile(r"(\d{2}/\d{2}/\d{4})")
+DATE_RE = re.compile(r"(\d{2})/(\d{2})/(\d{4})")
+PDF_RE = re.compile(r"\.pdf($|\?)", re.I)
 
-# padrões (normalizados, sem acentos)
+# Padrões (normalizados, sem acento)
 START_PATTERNS = [
     "inicio das submissoes",
     "inicio da submissao",
@@ -36,264 +35,211 @@ START_PATTERNS = [
 END_PATTERNS = [
     "data limite para submissao",
     "data limite para submissao das propostas",
+    "data limite para submissao das propostas online",
     "data limite para submissao eletronica",
     "data limite para submissao eletronica das propostas",
     "final do periodo de submissao",
     "final do periodo de submissao de propostas",
-    "encerramento das submissoes",
 ]
 
-CRONO_ANCHORS = [
-    "cronograma",
-    "periodo",
-    "submissao",  # ajuda quando “cronograma” não aparece limpo
-]
+def norm(text: str) -> str:
+    text = (text or "").strip().lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    text = re.sub(r"\s+", " ", text)
+    return text
 
-
-def norm_text(s: str) -> str:
-    """lower + remove acentos + normaliza espaços"""
-    if not s:
+def br_to_iso(br_date: str) -> str:
+    m = DATE_RE.search(br_date or "")
+    if not m:
         return ""
-    s = s.lower()
-    s = unicodedata.normalize("NFD", s)
-    s = "".join(ch for ch in s if unicodedata.category(ch) != "Mn")
-    s = re.sub(r"\s+", " ", s).strip()
-    return s
+    dd, mm, yyyy = m.group(1), m.group(2), m.group(3)
+    return f"{yyyy}-{mm}-{dd}"
 
+def first_date_in_text(text: str) -> str:
+    m = DATE_RE.search(text or "")
+    return br_to_iso(m.group(0)) if m else ""
 
-def ddmmyyyy_to_iso(d: str) -> str | None:
-    try:
-        dt = datetime.strptime(d, "%d/%m/%Y")
-        return dt.strftime("%Y-%m-%d")
-    except Exception:
-        return None
-
-
-def fetch_html(url: str) -> str:
-    r = requests.get(url, headers=HEADERS, timeout=30)
+def fetch(url: str) -> str:
+    r = requests.get(url, headers=HEADERS, timeout=40)
     r.raise_for_status()
     return r.text
 
+def fetch_bytes(url: str) -> bytes:
+    r = requests.get(url, headers=HEADERS, timeout=60)
+    r.raise_for_status()
+    return r.content
 
-def find_pdf_url_in_edital_page(edital_url: str) -> str | None:
-    """Procura o primeiro link .pdf na página do edital"""
-    html = fetch_html(edital_url)
+def extract_pdf_text(pdf_bytes: bytes, max_pages: int = 6) -> str:
+    # Lê as primeiras páginas, onde normalmente está o “CRONOGRAMA”
+    reader = PdfReader(io_bytes(pdf_bytes))
+    pages = min(len(reader.pages), max_pages)
+    out = []
+    for i in range(pages):
+        try:
+            out.append(reader.pages[i].extract_text() or "")
+        except Exception:
+            pass
+    return "\n".join(out)
+
+def io_bytes(b: bytes):
+    import io
+    return io.BytesIO(b)
+
+def find_pdf_link(edit_url: str) -> str:
+    html = fetch(edit_url)
     soup = BeautifulSoup(html, "html.parser")
 
-    # tenta achar links .pdf
+    # tenta achar links .pdf explícitos
     for a in soup.select("a[href]"):
-        href = a.get("href", "")
-        if href and ".pdf" in href.lower():
-            return urljoin(edital_url, href)
+        href = a.get("href", "").strip()
+        if href and PDF_RE.search(href):
+            return urljoin(edit_url, href)
 
-    return None
+    # fallback: às vezes o PDF está embutido em botões/arquivos
+    # procura por qualquer href contendo ".pdf"
+    pdf_any = soup.find("a", href=re.compile(r"\.pdf", re.I))
+    if pdf_any and pdf_any.get("href"):
+        return urljoin(edit_url, pdf_any["href"])
 
+    return ""
 
-def extract_text_from_pdf(pdf_bytes: bytes) -> str:
-    """Extrai texto do PDF inteiro (tudo junto)."""
-    reader = PdfReader(pdf_bytes)
-    parts = []
-    for page in reader.pages:
-        txt = page.extract_text() or ""
-        parts.append(txt)
-    return "\n".join(parts)
-
-
-def find_dates_near_patterns(full_text: str) -> tuple[str | None, str | None]:
+def extract_start_end_from_text(text: str):
     """
-    Retorna (start_iso, end_iso) procurando datas perto de padrões.
-    Estratégia:
-    - normaliza texto
-    - recorta janela depois de 'cronograma' se existir
-    - procura por padrões de início/fim e pega a primeira data próxima
+    Estratégia robusta:
+    - Normaliza o texto
+    - Procura por linhas contendo padrões de início/fim
+    - Pega a primeira data dd/mm/aaaa encontrada perto dessa linha
     """
-    raw = full_text or ""
-    n = norm_text(raw)
+    if not text:
+        return ("", "")
 
-    # tenta reduzir para uma janela após CRONOGRAMA (melhora precisão)
-    idx = n.find("cronograma")
-    if idx != -1:
-        window = n[idx: idx + 4000]  # janela razoável após “cronograma”
-        raw_window = raw[ max(0, idx-200): ]  # raw não tem o mesmo índice perfeito; mas ajuda pouco
-    else:
-        window = n[:8000]  # fallback
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
+    nlines = [norm(l) for l in lines]
 
-    # helper: acha data próxima de uma ocorrência
-    def date_after(pattern: str) -> str | None:
-        pos = window.find(pattern)
-        if pos == -1:
-            return None
+    start_iso = ""
+    end_iso = ""
 
-        # pega um trecho depois do padrão e busca data dd/mm/yyyy
-        snippet = window[pos: pos + 400]
-        m = DATE_RE.search(snippet)
-        if m:
-            return ddmmyyyy_to_iso(m.group(1))
-        return None
+    def scan_for(patterns):
+        for i, ln in enumerate(nlines):
+            if any(p in ln for p in patterns):
+                # tenta pegar data na mesma linha
+                d = first_date_in_text(lines[i])
+                if d:
+                    return d
+                # tenta nas 2 linhas seguintes (muito comum em tabelas)
+                for j in range(i+1, min(i+4, len(lines))):
+                    d2 = first_date_in_text(lines[j])
+                    if d2:
+                        return d2
+        return ""
 
-    # tenta start
-    start_iso = None
-    for p in START_PATTERNS:
-        start_iso = date_after(p)
-        if start_iso:
-            break
+    start_iso = scan_for(START_PATTERNS)
+    end_iso = scan_for(END_PATTERNS)
 
-    # tenta end
-    end_iso = None
-    for p in END_PATTERNS:
-        end_iso = date_after(p)
-        if end_iso:
-            break
+    return (start_iso, end_iso)
 
-    return start_iso, end_iso
-
-
-def parse_editais_abertos() -> list[dict]:
-    """
-    Busca a página "Editais Abertos" e extrai:
-    - title
-    - url (página do edital)
-    - area (quando disponível)
-    - type (quando disponível)
-    - date (quando disponível; se não, null)
-    """
-    html = fetch_html(BASE_LIST_URL)
+def parse_list_page():
+    html = fetch(BASE_LIST_URL)
     soup = BeautifulSoup(html, "html.parser")
 
     items = []
 
-    # A FAPEAM costuma listar cards/posts. Vamos pegar links de /editais/...
-    # Ajuste: pega todos os links que parecem ser editais e deduplica.
-    links = []
+    # A página pode mudar; então a gente coleta links que pareçam editais
     for a in soup.select("a[href]"):
-        href = a.get("href", "")
-        if "/editais/" in href:
-            # evita pegar a própria listagem
-            if "aba=editais-abertos" in href:
-                continue
-            links.append(urljoin(BASE_LIST_URL, href))
+        href = a.get("href", "").strip()
+        if not href:
+            continue
+        if "/editais/" in href and "fapeam.am.gov.br" in href:
+            title = a.get_text(" ", strip=True)
+            # filtra títulos muito curtos/menus
+            if title and len(title) >= 8 and "editais" not in norm(title):
+                items.append((title, href))
 
-    # dedupe preservando ordem
+    # remove duplicados por URL
     seen = set()
-    uniq_links = []
-    for u in links:
-        if u not in seen:
-            seen.add(u)
-            uniq_links.append(u)
-
-    for edital_url in uniq_links:
-        try:
-            edital_html = fetch_html(edital_url)
-            s2 = BeautifulSoup(edital_html, "html.parser")
-
-            # título: h1
-            title = (s2.select_one("h1") or {}).get_text(strip=True) if s2.select_one("h1") else "Edital"
-            title = title.replace("\u00a0", " ").strip()
-
-            # tentativa simples de extrair data/área/tipo do próprio texto (se existir)
-            page_text = s2.get_text(" ", strip=True)
-            page_norm = norm_text(page_text)
-
-            # data do edital (não é a data limite — é a “data do post” se existir no HTML)
-            # fallback: tenta achar dd/mm/yyyy no topo
-            mdate = DATE_RE.search(page_text[:2000])
-            date_iso = ddmmyyyy_to_iso(mdate.group(1)) if mdate else None
-
-            # heurísticas de tipo
-            tipo = "Edital"
-            if "programa" in page_norm:
-                tipo = "Programa"
-            if "chamada" in page_norm:
-                tipo = "Chamada"
-
-            # área (bem simples: tenta inferir por palavras comuns)
-            area = "Geral"
-            if "inovacao" in page_norm:
-                area = "Inovação"
-            if "pesquisa" in page_norm:
-                area = "Pesquisa"
-            if "eventos" in page_norm or "evento" in page_norm:
-                area = "Eventos"
-            if "interior" in page_norm:
-                area = "Interiorização"
-            if "gestao" in page_norm:
-                area = "Gestão"
-
-            items.append({
-                "title": title,
-                "url": edital_url,
-                "area": area,
-                "type": tipo,
-                "date": date_iso,        # data “do item” (pode ficar null)
-                "start_date": None,      # do cronograma (PDF)
-                "end_date": None         # do cronograma (PDF)
-            })
-
-            time.sleep(0.3)  # reduz risco de bloquear
-        except Exception as e:
-            # não quebra tudo por 1 edital
-            items.append({
-                "title": "Edital (erro ao ler)",
-                "url": edital_url,
-                "area": "Geral",
-                "type": "Edital",
-                "date": None,
-                "start_date": None,
-                "end_date": None,
-                "error": str(e)
-            })
-
-    return items
-
-
-def enrich_with_pdf_dates(items: list[dict]) -> list[dict]:
-    """Para cada edital, tenta baixar o PDF e extrair start_date/end_date."""
-    session = requests.Session()
-    session.headers.update(HEADERS)
-
-    for it in items:
-        url = it.get("url")
-        if not url or url == "#":
+    unique = []
+    for title, url in items:
+        if url in seen:
             continue
+        seen.add(url)
+        unique.append((title, url))
 
-        try:
-            pdf_url = find_pdf_url_in_edital_page(url)
-            if not pdf_url:
-                continue
+    return unique
 
-            r = session.get(pdf_url, timeout=60)
-            r.raise_for_status()
+def classify_area_type(title: str):
+    # heurística simples; você pode refinar depois
+    t = norm(title)
+    tipo = "Edital"
+    if "programa" in t:
+        tipo = "Programa"
+    elif "chamada" in t:
+        tipo = "Chamada"
 
-            text = extract_text_from_pdf(r.content)
-            start_iso, end_iso = find_dates_near_patterns(text)
+    area = "Geral"
+    if "evento" in t:
+        area = "Eventos"
+    elif "popularizacao" in t or "pop" in t:
+        area = "Popularização"
+    elif "interior" in t or "calha" in t:
+        area = "Interiorização"
+    elif "pesquisa" in t:
+        area = "Pesquisa"
+    elif "inovacao" in t or "tecnologia" in t:
+        area = "Inovação"
 
-            it["pdf_url"] = pdf_url
-            it["start_date"] = start_iso
-            it["end_date"] = end_iso
+    return area, tipo
 
-            time.sleep(0.3)
-        except Exception:
-            # deixa sem datas se falhar
-            continue
-
-    return items
-
+def extract_publish_date_from_page(edit_url: str) -> str:
+    # tenta achar uma data de publicação na página do edital
+    html = fetch(edit_url)
+    text = BeautifulSoup(html, "html.parser").get_text(" ", strip=True)
+    m = DATE_RE.search(text)
+    if m:
+        return br_to_iso(m.group(0))
+    return ""
 
 def main():
-    items = parse_editais_abertos()
-    items = enrich_with_pdf_dates(items)
+    raw_list = parse_list_page()
 
-    out = {
+    out_items = []
+    for title, url in raw_list:
+        area, tipo = classify_area_type(title)
+        pub_date = extract_publish_date_from_page(url)
+
+        # pegar pdf e extrair datas de submissão
+        start_date = ""
+        end_date = ""
+        try:
+            pdf_url = find_pdf_link(url)
+            if pdf_url:
+                pdf_bytes = fetch_bytes(pdf_url)
+                # texto primeiras páginas
+                pdf_text = extract_pdf_text(pdf_bytes, max_pages=7)
+                start_date, end_date = extract_start_end_from_text(pdf_text)
+        except Exception:
+            pass
+
+        out_items.append({
+            "title": title,
+            "url": url,
+            "area": area,
+            "type": tipo,
+            "date": pub_date,
+            "start_date": start_date,
+            "end_date": end_date
+        })
+
+    data = {
         "updated_at": datetime.now().strftime("%Y-%m-%d"),
         "source": BASE_LIST_URL,
-        "items": items
+        "items": out_items
     }
 
     with open(OUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(out, f, ensure_ascii=False, indent=2)
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"OK: {OUT_JSON} atualizado com {len(items)} editais.")
-
+    print(f"OK: {len(out_items)} editais -> {OUT_JSON}")
 
 if __name__ == "__main__":
     main()
