@@ -3,7 +3,8 @@ name: Update data.json (FAPEAM)
 on:
   workflow_dispatch: {}
   schedule:
-    - cron: "0 9 * * 1"   # segunda-feira 09:00 UTC (05:00 Manaus)
+    # Toda segunda-feira às 09:00 UTC (≈ 05:00 em Manaus)
+    - cron: "0 9 * * 1"
 
 permissions:
   contents: write
@@ -13,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -26,18 +27,29 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pypdf
 
-      - name: Run scraper (with retry)
-  run: |
-    for i in 1 2 3; do
-      python scripts/scrape_fapeam.py && break
-      echo "Tentativa $i falhou. Aguardando..."
-      sleep $((i*20))
-    done
+      - name: Run scraper
+        shell: bash
+        run: |
+          set -e
+
+          echo "Rodando scraper com tentativas para evitar erro temporário de rede/DNS..."
+
+          for i in 1 2 3 4 5; do
+            echo "Tentativa $i de 5"
+            python scripts/scrape_fapeam.py && break
+            echo "Falhou. Aguardando 20 segundos..."
+            sleep 20
+          done
 
       - name: Commit and push if changed
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data.json
-          git diff --cached --quiet || git commit -m "Atualiza data.json (automático)"
-          git push
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git status --porcelain | grep .; then
+            git add data.json
+            git commit -m "Atualização automática do data.json (FAPEAM)"
+            git push
+          else
+            echo "Nenhuma alteração detectada no data.json"
+          fi
