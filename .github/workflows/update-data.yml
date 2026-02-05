@@ -1,30 +1,29 @@
 name: Update data.json (FAPEAM)
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
   schedule:
-    # Toda segunda-feira às 09:00 UTC (05:00 em Manaus)
+    # Toda segunda-feira 09:00 UTC (em Manaus costuma ser 05:00)
     - cron: "0 9 * * 1"
-
-# Evita dois updates rodando ao mesmo tempo e brigando pelo push
-concurrency:
-  group: fapeam-data-json-update
-  cancel-in-progress: true
 
 permissions:
   contents: write
+
+concurrency:
+  group: fapeam-data-update
+  cancel-in-progress: true
 
 jobs:
   update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # importante para permitir pull/rebase correto
+          fetch-depth: 0
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -34,36 +33,31 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pypdf
 
-      - name: Run scraper (retry 5x)
+      - name: Run scraper (with retries)
         run: |
           set -e
-          echo "Running scripts/scrape_fapeam.py with retries..."
-          for i in 1 2 3 4 5; do
-            echo "Attempt $i/5"
-            if python scripts/scrape_fapeam.py; then
-              echo "Scraper succeeded."
-              exit 0
-            fi
-            echo "Scraper failed. Waiting 15s..."
-            sleep 15
+          for i in 1 2 3; do
+            python scripts/scrape_fapeam.py && break
+            echo "Tentativa $i falhou. Aguardando..."
+            sleep $((i*20))
           done
-          echo "Scraper failed after 5 attempts."
-          exit 1
 
-      - name: Commit and push if changed (with rebase)
+      - name: Commit and push if changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git add data.json
-            git commit -m "Atualização automática do data.json (FAPEAM)"
+          # evita "rejected (fetch first)" se o branch avançou
+          git pull --rebase origin main || true
 
-            # Atualiza o branch local com o que já existe no GitHub
-            git pull --rebase origin main
-
-            # Agora sim, empurra
-            git push origin HEAD:main
-          else
-            echo "No changes to commit."
+          git add data.json
+          if git diff --cached --quiet; then
+            echo "Sem mudanças no data.json."
+            exit 0
           fi
+
+          git commit -m "Atualiza data.json (automático)"
+          git push origin main
