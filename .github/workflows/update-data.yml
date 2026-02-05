@@ -27,24 +27,31 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 pypdf
 
-      - name: Run scraper (with retry protection)
+      - name: Run scraper (retry 5x)
         run: |
-          echo "Running FAPEAM scraper..."
+          set -e
+          echo "Running scripts/scrape_fapeam.py with retries..."
           for i in 1 2 3 4 5; do
-            python scripts/scrape_fapeam.py && break
-            echo "Attempt $i failed. Waiting 15 seconds..."
+            echo "Attempt $i/5"
+            if python scripts/scrape_fapeam.py; then
+              echo "Scraper succeeded."
+              exit 0
+            fi
+            echo "Scraper failed. Waiting 15s..."
             sleep 15
           done
+          echo "Scraper failed after 5 attempts."
+          exit 1
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          if [[ `git status --porcelain` ]]; then
+          if [[ -n "$(git status --porcelain)" ]]; then
             git add data.json
             git commit -m "Atualização automática do data.json (FAPEAM)"
             git push
           else
-            echo "No changes to commit"
+            echo "No changes to commit."
           fi
