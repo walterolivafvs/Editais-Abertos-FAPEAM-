@@ -6,6 +6,11 @@ on:
     # Toda segunda-feira às 09:00 UTC (05:00 em Manaus)
     - cron: "0 9 * * 1"
 
+# Evita dois updates rodando ao mesmo tempo e brigando pelo push
+concurrency:
+  group: fapeam-data-json-update
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -16,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # importante para permitir pull/rebase correto
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,7 +50,7 @@ jobs:
           echo "Scraper failed after 5 attempts."
           exit 1
 
-      - name: Commit and push if changed
+      - name: Commit and push if changed (with rebase)
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
@@ -51,7 +58,12 @@ jobs:
           if [[ -n "$(git status --porcelain)" ]]; then
             git add data.json
             git commit -m "Atualização automática do data.json (FAPEAM)"
-            git push
+
+            # Atualiza o branch local com o que já existe no GitHub
+            git pull --rebase origin main
+
+            # Agora sim, empurra
+            git push origin HEAD:main
           else
             echo "No changes to commit."
           fi
