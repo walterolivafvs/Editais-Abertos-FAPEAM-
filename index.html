@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,34 +7,39 @@
 
   <style>
     :root{
-      --bg:#f4f6f7;
+      --bg:#f5f7f6;
       --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --brand:#2f6b4f;
-      --pill:#e9f3ed;
-      --border:#e5e7eb;
-      --shadow: 0 8px 22px rgba(15,23,42,.08);
-      --radius:18px;
-      --radius2:14px;
+      --ink:#1f2a2e;
+      --muted:#61727a;
+      --green:#2f5f4e;
+      --green2:#3b725e;
+      --line:#e6ece9;
+      --pill:#eaf2ee;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --radius: 18px;
+      --radius2: 14px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
+
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+      font-family:var(--font);
+      color:var(--ink);
       background:var(--bg);
-      color:var(--text);
     }
-    header{
-      background:#5f7f72;
-      color:white;
-      padding:18px 16px;
-    }
-    .wrap{max-width:980px;margin:0 auto;padding:0 14px;}
+
     .topbar{
+      background:linear-gradient(0deg,var(--green),var(--green2));
+      color:#fff;
+      padding:18px 18px;
+    }
+    .topbar-inner{
+      max-width: 1100px;
+      margin:0 auto;
       display:flex;
-      align-items:center;
       gap:14px;
+      align-items:center;
       justify-content:space-between;
       flex-wrap:wrap;
     }
@@ -46,128 +51,242 @@
     }
     .brand img{
       width:46px;height:46px;object-fit:contain;
-      border-radius:10px;background:white;padding:6px;
+      background:#fff;border-radius:12px;padding:6px;
     }
     .brand h1{
-      font-size:16px;margin:0;line-height:1.2;font-weight:700;
+      margin:0;
+      font-size:18px;
+      line-height:1.2;
+      font-weight:800;
+      letter-spacing:.2px;
     }
-    .brand p{margin:0;font-size:12px;opacity:.9}
-    .pills{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .brand p{
+      margin:2px 0 0;
+      font-size:12px;
+      opacity:.9;
+    }
+
+    .pills{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
     .pill{
-      background:rgba(255,255,255,.18);
-      border:1px solid rgba(255,255,255,.25);
-      padding:8px 10px;border-radius:999px;
-      font-size:12px;white-space:nowrap;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.22);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:12px;
+      white-space:nowrap;
     }
-    main{padding:22px 0 50px}
+
+    main{
+      max-width:1100px;
+      margin: 22px auto 60px;
+      padding: 0 18px;
+    }
+
     .panel{
       background:var(--card);
-      border:1px solid var(--border);
+      border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:18px;
     }
-    .panel h2{margin:0 0 6px;font-size:22px}
-    .panel p{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.4}
 
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 14px}
-    button{
-      border:1px solid var(--border);
-      background:#f8fafc;
-      padding:10px 12px;border-radius:12px;
-      cursor:pointer;font-weight:600;
+    .panel h2{
+      margin:0 0 4px;
+      font-size:22px;
+      letter-spacing:.2px;
     }
-    button.primary{background:var(--brand);color:white;border-color:transparent}
-    button:active{transform:translateY(1px)}
+    .panel .sub{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin: 10px 0 14px;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      cursor:pointer;
+      border-radius: 12px;
+      padding:10px 12px;
+      font-weight:700;
+      font-size:13px;
+    }
+    .btn-primary{
+      background:var(--green);
+      color:#fff;
+    }
+    .btn-secondary{
+      background:#eef3f0;
+      color:var(--ink);
+      border:1px solid var(--line);
+    }
+
     .filters{
       display:grid;
-      grid-template-columns: 1.4fr 1fr 1fr 1fr;
-      gap:12px;
-      margin-top:10px;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap:10px;
+      align-items:end;
     }
-    .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-    input,select{
+    .field label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 6px;
+      font-weight:700;
+    }
+    input, select{
       width:100%;
-      padding:10px 10px;
-      border-radius:12px;
-      border:1px solid var(--border);
+      padding:11px 12px;
+      border-radius: 12px;
+      border:1px solid var(--line);
       outline:none;
-      background:white;
+      font-size:13px;
+      background:#fff;
     }
-    .section{
+
+    .list{
       margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .group{
       background:var(--card);
-      border:1px solid var(--border);
+      border:1px solid var(--line);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:14px;
     }
-    .section-head{
-      display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
-      padding:6px 6px 10px 6px;
+    .group-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
     }
-    .section-head h3{margin:0;font-size:16px}
-    .section-head .count{font-size:12px;color:var(--muted);background:#f1f5f9;border-radius:999px;padding:6px 10px}
-
-    .meta-pills{display:flex;gap:8px;flex-wrap:wrap}
-    .meta-pills span{
-      background:var(--pill);
-      color:var(--brand);
-      border:1px solid #d3e8dc;
-      padding:6px 10px;border-radius:999px;
-      font-size:12px;font-weight:700;
+    .group-title{
+      font-size:14px;
+      font-weight:900;
     }
-
-    .cards{display:flex;flex-direction:column;gap:12px;margin-top:6px}
-    .card{
-      border:1px solid var(--border);
-      border-radius:var(--radius2);
-      padding:12px;
-      background:white;
-    }
-    .card .row{
-      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;
-    }
-    .card h4{margin:0 0 4px;font-size:14px}
-    .card a{color:#0b5bd3;text-decoration:none;word-break:break-all;font-size:12px}
-    .card a:hover{text-decoration:underline}
-    .small{font-size:12px;color:var(--muted)}
-    .muted{color:var(--muted)}
-    .errorbox{
-      margin-top:16px;
-      border:1px solid #fecaca;
-      background:#fff1f2;
-      color:#7f1d1d;
-      padding:12px;
-      border-radius:14px;
-      display:none;
-      white-space:pre-wrap;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    .group-count{
       font-size:12px;
+      color:var(--muted);
+      background:var(--pill);
+      border:1px solid var(--line);
+      padding:6px 10px;
+      border-radius:999px;
     }
-    footer{
+
+    .item{
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      padding:12px 12px;
+      background:#fff;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .badge{
+      width:28px;height:28px;
+      border-radius: 10px;
+      background:var(--green);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:12px;
+      flex:0 0 auto;
+    }
+
+    .meta{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-bottom:6px;
+    }
+    .tag{
+      font-size:12px;
+      color:var(--green);
+      background:var(--pill);
+      border:1px solid var(--line);
+      padding:4px 10px;
+      border-radius:999px;
+      font-weight:800;
+    }
+    .title{
+      font-weight:900;
+      margin:0 0 4px;
+      font-size:14px;
+      line-height:1.25;
+    }
+    .link{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+      word-break:break-word;
+    }
+    .link a{ color:var(--muted); text-decoration:none; }
+    .link a:hover{ text-decoration:underline; }
+
+    .footer{
       margin-top:16px;
       color:var(--muted);
       font-size:12px;
       display:flex;
       justify-content:space-between;
-      flex-wrap:wrap;
       gap:10px;
-      padding:0 4px;
+      flex-wrap:wrap;
+      padding: 0 6px;
     }
-    @media (max-width: 860px){
-      .filters{grid-template-columns: 1fr 1fr}
+
+    .error{
+      margin-top:14px;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid #ffd0d0;
+      background:#fff3f3;
+      color:#7b1d1d;
+      display:none;
+      white-space:pre-wrap;
+      font-size:12px;
+      line-height:1.35;
     }
-    @media (max-width: 520px){
-      .filters{grid-template-columns: 1fr}
+
+    @media (max-width: 900px){
+      .filters{ grid-template-columns: 1fr; }
+      .brand{ min-width:auto; }
+      .topbar-inner{ justify-content:flex-start; }
+      .pills{ justify-content:flex-start; }
+    }
+
+    @media print{
+      .topbar, .actions, .filters { display:none !important; }
+      body{ background:#fff; }
+      .panel, .group{ box-shadow:none; }
     }
   </style>
 </head>
 
 <body>
-<header>
-  <div class="wrap">
-    <div class="topbar">
+  <header class="topbar">
+    <div class="topbar-inner">
       <div class="brand">
         <img src="logo.png" alt="FVS" />
         <div>
@@ -175,26 +294,26 @@
           <p>Painel público de links — Editais Abertos (FAPEAM)</p>
         </div>
       </div>
-
       <div class="pills">
-        <div class="pill">Atualizado: <span id="pillUpdated">—</span></div>
-        <div class="pill">Total: <span id="pillTotal">0</span> editais</div>
-        <div class="pill">Fonte: <span id="pillFonte">—</span></div>
+        <div class="pill" id="pill-updated">Atualizado: —</div>
+        <div class="pill" id="pill-total">Total: —</div>
+        <div class="pill" id="pill-source">Fonte: —</div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
 
-<main>
-  <div class="wrap">
-    <div class="panel">
+  <main>
+    <section class="panel">
       <h2>Editais Abertos — FAPEAM</h2>
-      <p>Use busca e filtros para localizar rapidamente por <b>data</b>, <b>área</b> e <b>tipo</b>. No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.</p>
+      <p class="sub">
+        Use busca e filtros para localizar rapidamente por <b>data</b>, <b>área</b> e <b>tipo</b>.
+        No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.
+      </p>
 
       <div class="actions">
-        <button class="primary" id="btnCopy">Copiar tudo</button>
-        <button id="btnPrint">Imprimir / Salvar PDF</button>
-        <button id="btnClear">Limpar filtros</button>
+        <button class="btn-primary" id="btn-copy">Copiar tudo</button>
+        <button class="btn-secondary" id="btn-print">Imprimir / Salvar PDF</button>
+        <button class="btn-secondary" id="btn-clear">Limpar filtros</button>
       </div>
 
       <div class="filters">
@@ -212,336 +331,290 @@
         </div>
         <div class="field">
           <label>Ordenação</label>
-          <select id="ord">
+          <select id="sort">
             <option value="date_desc">Data (mais recente)</option>
             <option value="date_asc">Data (mais antiga)</option>
             <option value="title_asc">Título (A–Z)</option>
-            <option value="title_desc">Título (Z–A)</option>
           </select>
         </div>
       </div>
 
-      <div id="errorbox" class="errorbox"></div>
-    </div>
+      <div class="error" id="err"></div>
 
-    <div id="out"></div>
+      <div class="list" id="list"></div>
 
-    <footer>
-      <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
-      <div>Fonte: <span id="footerFonte">—</span></div>
-    </footer>
-  </div>
-</main>
+      <div class="footer">
+        <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
+        <div id="foot-source">Fonte: —</div>
+      </div>
+    </section>
+  </main>
 
-<script>
-  // =========================================================
-  // CONFIG
-  // =========================================================
-  const DATA_URL = new URL("data.json", window.location.href).toString();
-  const RAW_FALLBACK = "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json";
+  <script>
+    // ✅ Fonte do JSON: RAW do GitHub (mais estável que /data.json no Pages)
+    const DATA_URL = "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json";
 
-  // =========================================================
-  // STATE
-  // =========================================================
-  let EDITAIS = [];
-  let FONTE = "";
-  let UPDATED = "";
+    const $ = (id) => document.getElementById(id);
 
-  const el = (id) => document.getElementById(id);
-  const errorbox = el("errorbox");
-
-  function showError(msg){
-    errorbox.style.display = "block";
-    errorbox.textContent = msg;
-  }
-  function clearError(){
-    errorbox.style.display = "none";
-    errorbox.textContent = "";
-  }
-
-  function formatBR(yyyy_mm_dd){
-    if(!yyyy_mm_dd) return "";
-    const [y,m,d] = String(yyyy_mm_dd).split("-");
-    if(!y||!m||!d) return "";
-    return `${d}/${m}/${y}`;
-  }
-
-  function safeStr(v){ return (v===null || v===undefined) ? "" : String(v); }
-
-  function unique(arr){
-    return Array.from(new Set(arr)).sort((a,b)=>a.localeCompare(b,"pt-BR"));
-  }
-
-  // =========================================================
-  // LOAD DATA (com anti-cache + fallback)
-  // =========================================================
-  async function fetchJson(url){
-    const u = url.includes("?") ? (url + "&") : (url + "?");
-    const bust = u + "v=" + Date.now();
-    const res = await fetch(bust, { cache:"no-store" });
-    if(!res.ok) throw new Error(`Falha ao carregar: ${url} (HTTP ${res.status})`);
-    return await res.json();
-  }
-
-  async function carregarDados(){
-    clearError();
-    try{
-      const data = await fetchJson(DATA_URL);
-      return data;
-    }catch(e1){
-      // tenta fallback raw
-      try{
-        const data2 = await fetchJson(RAW_FALLBACK);
-        showError(
-          "⚠️ Aviso: não consegui ler data.json via GitHub Pages, usei fallback RAW.\n" +
-          "Isso normalmente é cache/propagação do Pages.\n\nDetalhe:\n" + e1.message
-        );
-        return data2;
-      }catch(e2){
-        showError(
-          "❌ Erro: não consegui carregar o data.json nem pelo Pages nem pelo RAW.\n\n" +
-          "Pages: " + e1.message + "\n" +
-          "RAW: " + e2.message + "\n\n" +
-          "Verifique se data.json está na raiz do repositório e se o Pages está apontando para main/(root)."
-        );
-        throw e2;
-      }
-    }
-  }
-
-  // =========================================================
-  // UI
-  // =========================================================
-  function fillSelect(selectEl, values){
-    selectEl.innerHTML = "";
-    const optAll = document.createElement("option");
-    optAll.value = "";
-    optAll.textContent = "Todos";
-    selectEl.appendChild(optAll);
-
-    values.forEach(v=>{
-      const o = document.createElement("option");
-      o.value = v;
-      o.textContent = v;
-      selectEl.appendChild(o);
-    });
-  }
-
-  function applyFilters(){
-    const q = el("q").value.trim().toLowerCase();
-    const area = el("area").value;
-    const tipo = el("tipo").value;
-    const ord = el("ord").value;
-
-    let arr = EDITAIS.slice();
-
-    if(q){
-      arr = arr.filter(it=>{
-        const t = safeStr(it.titulo).toLowerCase();
-        const u = safeStr(it.url).toLowerCase();
-        return t.includes(q) || u.includes(q);
-      });
-    }
-    if(area) arr = arr.filter(it=> it.area === area);
-    if(tipo) arr = arr.filter(it=> it.tipo === tipo);
-
-    // ordenação
-    const getDateKey = (it) => {
-      // se não tiver data, manda para o fim
-      const d = safeStr(it.data);
-      if(!d) return "0000-00-00";
-      return d;
+    const state = {
+      items: [],
+      updated_at: null,
+      source: null
     };
 
-    if(ord === "date_desc"){
-      arr.sort((a,b)=> getDateKey(b).localeCompare(getDateKey(a)));
-    }else if(ord === "date_asc"){
-      arr.sort((a,b)=> getDateKey(a).localeCompare(getDateKey(b)));
-    }else if(ord === "title_asc"){
-      arr.sort((a,b)=> safeStr(a.titulo).localeCompare(safeStr(b.titulo),"pt-BR"));
-    }else if(ord === "title_desc"){
-      arr.sort((a,b)=> safeStr(b.titulo).localeCompare(safeStr(a.titulo),"pt-BR"));
+    function showError(msg){
+      const box = $("err");
+      box.style.display = "block";
+      box.textContent =
+        "ERRO ao carregar dados.\n\n" +
+        msg + "\n\n" +
+        "Verifique:\n" +
+        "1) Se o arquivo data.json existe no repositório (root)\n" +
+        "2) Se o link RAW abre no navegador\n" +
+        "3) Se o GitHub Pages está publicado a partir do branch main /(root)\n";
     }
 
-    render(arr);
-  }
-
-  function groupByDate(arr){
-    const map = new Map();
-    for(const it of arr){
-      const key = it.data ? it.data : "";
-      if(!map.has(key)) map.set(key, []);
-      map.get(key).push(it);
+    function hideError(){
+      const box = $("err");
+      box.style.display = "none";
+      box.textContent = "";
     }
-    // ordenar grupos por data desc, sem data por último
-    const keys = Array.from(map.keys()).sort((a,b)=>{
-      if(!a && !b) return 0;
-      if(!a) return 1;
-      if(!b) return -1;
-      return b.localeCompare(a);
-    });
-    return keys.map(k=>({date:k, items: map.get(k)}));
-  }
 
-  function render(arr){
-    el("pillTotal").textContent = String(arr.length);
-
-    const out = el("out");
-    out.innerHTML = "";
-
-    const groups = groupByDate(arr);
-
-    for(const g of groups){
-      const section = document.createElement("div");
-      section.className = "section";
-
-      const head = document.createElement("div");
-      head.className = "section-head";
-
-      const title = document.createElement("h3");
-      title.textContent = g.date ? ("Data: " + formatBR(g.date)) : "Data: Sem data";
-
-      const count = document.createElement("div");
-      count.className = "count";
-      count.textContent = `${g.items.length} edital(is)`;
-
-      head.appendChild(title);
-      head.appendChild(count);
-
-      section.appendChild(head);
-
-      // cards
-      const cards = document.createElement("div");
-      cards.className = "cards";
-
-      g.items.forEach((it, idx)=>{
-        const c = document.createElement("div");
-        c.className = "card";
-
-        const row = document.createElement("div");
-        row.className = "row";
-
-        const left = document.createElement("div");
-        const h = document.createElement("h4");
-        h.textContent = it.titulo || "(sem título)";
-
-        const a = document.createElement("a");
-        a.href = it.url || "#";
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.textContent = it.url || "";
-
-        left.appendChild(h);
-        left.appendChild(a);
-
-        const right = document.createElement("div");
-        right.className = "meta-pills";
-        const p1 = document.createElement("span");
-        p1.textContent = it.area || "Geral";
-        const p2 = document.createElement("span");
-        p2.textContent = it.tipo || "Edital";
-        right.appendChild(p1);
-        right.appendChild(p2);
-
-        row.appendChild(left);
-        row.appendChild(right);
-
-        c.appendChild(row);
-        cards.appendChild(c);
-      });
-
-      section.appendChild(cards);
-      out.appendChild(section);
+    function formatBR(yyyy_mm_dd){
+      if(!yyyy_mm_dd) return "Sem data";
+      const parts = String(yyyy_mm_dd).split("-");
+      if(parts.length !== 3) return "Sem data";
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
-  }
 
-  // =========================================================
-  // BUTTONS
-  // =========================================================
-  el("btnPrint").addEventListener("click", ()=> window.print());
-
-  el("btnClear").addEventListener("click", ()=>{
-    el("q").value = "";
-    el("area").value = "";
-    el("tipo").value = "";
-    el("ord").value = "date_desc";
-    applyFilters();
-  });
-
-  el("btnCopy").addEventListener("click", async ()=>{
-    const q = el("q").value.trim().toLowerCase();
-    const area = el("area").value;
-    const tipo = el("tipo").value;
-
-    let arr = EDITAIS.slice();
-    if(q){
-      arr = arr.filter(it=>{
-        const t = safeStr(it.titulo).toLowerCase();
-        const u = safeStr(it.url).toLowerCase();
-        return t.includes(q) || u.includes(q);
-      });
+    function safeText(v){
+      return (v === null || v === undefined) ? "" : String(v);
     }
-    if(area) arr = arr.filter(it=> it.area === area);
-    if(tipo) arr = arr.filter(it=> it.tipo === tipo);
 
-    const lines = arr.map(it => `${it.titulo || "(sem título)"}\n${it.url || ""}`).join("\n\n");
-    try{
-      await navigator.clipboard.writeText(lines);
-      alert("Copiado!");
-    }catch(e){
-      // fallback
-      const ta = document.createElement("textarea");
-      ta.value = lines;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      ta.remove();
-      alert("Copiado!");
+    function uniqueSorted(arr){
+      return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
     }
-  });
 
-  // filtros
-  ["q","area","tipo","ord"].forEach(id=>{
-    el(id).addEventListener("input", applyFilters);
-    el(id).addEventListener("change", applyFilters);
-  });
-
-  // =========================================================
-  // INIT
-  // =========================================================
-  (async ()=>{
-    try{
-      const data = await carregarDados();
-
-      UPDATED = safeStr(data.updated_at);
-      FONTE = safeStr(data.source) || "manual";
-
-      el("pillUpdated").textContent = UPDATED ? formatBR(UPDATED) : "—";
-      el("pillFonte").textContent = (FONTE === "manual") ? "manual" : "site da FAPEAM";
-      el("footerFonte").textContent = FONTE;
-
-      // normaliza itens
-      const items = Array.isArray(data.items) ? data.items : [];
-      EDITAIS = items.map(it=>({
-        titulo: it.title || it.titulo || "",
-        url: it.url || "",
-        data: it.date || "",
-        area: it.area || "Geral",
-        tipo: it.type || it.tipo || "Edital"
+    function normalizeItems(raw){
+      const list = (raw.items || []).map(it => ({
+        titulo: safeText(it.title || it.titulo || "(sem título)"),
+        url: safeText(it.url || ""),
+        data: safeText(it.date || it.data || ""), // no teu padrão atual, date é "YYYY-MM-DD" (ou vazio)
+        area: safeText(it.area || "Geral"),
+        tipo: safeText(it.type || it.tipo || "Edital")
       }));
-
-      // popula selects
-      fillSelect(el("area"), unique(EDITAIS.map(x=>x.area).filter(Boolean)));
-      fillSelect(el("tipo"), unique(EDITAIS.map(x=>x.tipo).filter(Boolean)));
-
-      applyFilters();
-    }catch(e){
-      // se falhou total, pelo menos mostra algo
-      el("pillFonte").textContent = "erro";
-      el("footerFonte").textContent = "erro";
+      return list.filter(x => x.url);
     }
-  })();
-</script>
 
+    function fillSelect(sel, values){
+      sel.innerHTML = "";
+      const optAll = document.createElement("option");
+      optAll.value = "";
+      optAll.textContent = "Todas";
+      sel.appendChild(optAll);
+
+      for(const v of values){
+        const op = document.createElement("option");
+        op.value = v;
+        op.textContent = v;
+        sel.appendChild(op);
+      }
+    }
+
+    function applyFilters(){
+      const q = $("q").value.trim().toLowerCase();
+      const area = $("area").value;
+      const tipo = $("tipo").value;
+      const sort = $("sort").value;
+
+      let arr = [...state.items];
+
+      if(q){
+        arr = arr.filter(x =>
+          x.titulo.toLowerCase().includes(q) ||
+          x.url.toLowerCase().includes(q)
+        );
+      }
+      if(area) arr = arr.filter(x => x.area === area);
+      if(tipo) arr = arr.filter(x => x.tipo === tipo);
+
+      // sort
+      if(sort === "title_asc"){
+        arr.sort((a,b)=>a.titulo.localeCompare(b.titulo,"pt-BR"));
+      } else if(sort === "date_asc"){
+        arr.sort((a,b)=> (a.data||"9999-12-31").localeCompare(b.data||"9999-12-31"));
+      } else {
+        // date_desc default
+        arr.sort((a,b)=> (b.data||"").localeCompare(a.data||""));
+      }
+
+      render(arr);
+      $("pill-total").textContent = `Total: ${arr.length} editais`;
+    }
+
+    function groupByDate(arr){
+      const map = new Map();
+      for(const it of arr){
+        const key = it.data ? `Data: ${formatBR(it.data)}` : "Data: Sem data";
+        if(!map.has(key)) map.set(key, []);
+        map.get(key).push(it);
+      }
+      return map;
+    }
+
+    function render(arr){
+      const list = $("list");
+      list.innerHTML = "";
+
+      const groups = groupByDate(arr);
+      let n = 0;
+
+      for(const [dateLabel, items] of groups){
+        const box = document.createElement("div");
+        box.className = "group";
+
+        const head = document.createElement("div");
+        head.className = "group-head";
+
+        const title = document.createElement("div");
+        title.className = "group-title";
+        title.textContent = dateLabel;
+
+        const count = document.createElement("div");
+        count.className = "group-count";
+        count.textContent = `${items.length} edital(is)`;
+
+        head.appendChild(title);
+        head.appendChild(count);
+        box.appendChild(head);
+
+        for(const it of items){
+          n += 1;
+          const row = document.createElement("div");
+          row.className = "item";
+
+          const badge = document.createElement("div");
+          badge.className = "badge";
+          badge.textContent = String(n);
+
+          const content = document.createElement("div");
+          const meta = document.createElement("div");
+          meta.className = "meta";
+
+          const tagA = document.createElement("div");
+          tagA.className = "tag";
+          tagA.textContent = it.area || "Geral";
+
+          const tagT = document.createElement("div");
+          tagT.className = "tag";
+          tagT.textContent = it.tipo || "Edital";
+
+          meta.appendChild(tagA);
+          meta.appendChild(tagT);
+
+          const h = document.createElement("p");
+          h.className = "title";
+          h.textContent = it.titulo || "(sem título)";
+
+          const p = document.createElement("p");
+          p.className = "link";
+          const a = document.createElement("a");
+          a.href = it.url;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = it.url;
+          p.appendChild(a);
+
+          content.appendChild(meta);
+          content.appendChild(h);
+          content.appendChild(p);
+
+          row.appendChild(badge);
+          row.appendChild(content);
+          box.appendChild(row);
+        }
+
+        list.appendChild(box);
+      }
+
+      if(arr.length === 0){
+        const empty = document.createElement("div");
+        empty.className = "group";
+        empty.innerHTML = "<b>Nenhum resultado</b><div style='margin-top:6px;color:#61727a;font-size:12px'>Ajuste os filtros.</div>";
+        list.appendChild(empty);
+      }
+    }
+
+    async function load(){
+      hideError();
+      try{
+        const res = await fetch(DATA_URL, { cache: "no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+
+        const raw = await res.json();
+
+        state.updated_at = raw.updated_at || null;
+        state.source = raw.source || null;
+        state.items = normalizeItems(raw);
+
+        // pills
+        $("pill-updated").textContent = "Atualizado: " + (state.updated_at ? formatBR(state.updated_at) : "—");
+        $("pill-total").textContent = `Total: ${state.items.length} editais`;
+        $("pill-source").textContent = "Fonte: site da FAPEAM";
+        $("foot-source").textContent = "Fonte: " + (state.source || "manual");
+
+        // filtros
+        const areas = uniqueSorted(state.items.map(x=>x.area || "Geral"));
+        const tipos = uniqueSorted(state.items.map(x=>x.tipo || "Edital"));
+        fillSelect($("area"), areas);
+        fillSelect($("tipo"), tipos);
+
+        applyFilters();
+
+      }catch(e){
+        showError(String(e));
+      }
+    }
+
+    // ações
+    $("btn-print").addEventListener("click", ()=>window.print());
+
+    $("btn-clear").addEventListener("click", ()=>{
+      $("q").value = "";
+      $("area").value = "";
+      $("tipo").value = "";
+      $("sort").value = "date_desc";
+      applyFilters();
+    });
+
+    $("btn-copy").addEventListener("click", async ()=>{
+      const visibleLinks = [];
+      const groups = $("list").querySelectorAll(".item a");
+      groups.forEach(a=>visibleLinks.push(a.href));
+
+      const text = visibleLinks.join("\n");
+      try{
+        await navigator.clipboard.writeText(text);
+        alert("Links copiados (" + visibleLinks.length + ").");
+      }catch{
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        alert("Links copiados (" + visibleLinks.length + ").");
+      }
+    });
+
+    // filtros em tempo real
+    ["q","area","tipo","sort"].forEach(id=>{
+      $(id).addEventListener("input", applyFilters);
+      $(id).addEventListener("change", applyFilters);
+    });
+
+    load();
+  </script>
 </body>
 </html>
