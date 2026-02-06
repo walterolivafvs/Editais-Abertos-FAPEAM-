@@ -272,7 +272,7 @@
  * - Para NÃO depender do /data.json do GitHub Pages, usamos CDN do GitHub.
  * - Isso evita “página em branco” quando o fetch relativo quebra.
  */
-const DATA_URL_BASE = "https://cdn.jsdelivr.net/gh/walterolivafvs/Editais-Abertos-FAPEAM-@main/data.json";
+const DATA_URL = "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json?nocache=" + Date.now();
 
 function todayBR(iso){
   if(!iso) return "—";
