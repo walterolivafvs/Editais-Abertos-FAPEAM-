@@ -7,76 +7,67 @@
 
   <style>
     :root{
-      --bg:#f5f7f6;
+      --bg:#f6f7f8;
       --card:#ffffff;
-      --ink:#1f2a2e;
-      --muted:#61727a;
-      --green:#2f5f4e;
-      --green2:#3b725e;
-      --line:#e6ece9;
-      --pill:#eaf2ee;
-      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --text:#0f172a;
+      --muted:#64748b;
+      --brand:#2f6f57;
+      --pill:#e7f2ee;
+      --border:#e5e7eb;
+      --shadow: 0 10px 25px rgba(15, 23, 42, .08);
       --radius: 18px;
-      --radius2: 14px;
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
-
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family:var(--font);
-      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background:var(--bg);
+      color:var(--text);
     }
-
-    .topbar{
-      background:linear-gradient(0deg,var(--green),var(--green2));
+    header{
+      background:#5f7f74;
       color:#fff;
       padding:18px 18px;
+      position:sticky;
+      top:0;
+      z-index:10;
     }
-    .topbar-inner{
-      max-width: 1100px;
+    .topbar{
+      max-width:1100px;
       margin:0 auto;
       display:flex;
-      gap:14px;
       align-items:center;
       justify-content:space-between;
-      flex-wrap:wrap;
+      gap:12px;
     }
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:260px;
+      min-width: 260px;
     }
     .brand img{
-      width:46px;height:46px;object-fit:contain;
-      background:#fff;border-radius:12px;padding:6px;
+      width:44px;
+      height:44px;
+      object-fit:contain;
+      border-radius:12px;
+      background:#fff;
+      padding:6px;
     }
-    .brand h1{
-      margin:0;
-      font-size:18px;
-      line-height:1.2;
-      font-weight:800;
-      letter-spacing:.2px;
-    }
-    .brand p{
-      margin:2px 0 0;
-      font-size:12px;
-      opacity:.9;
-    }
+    .brand .t1{ font-weight:800; letter-spacing:.2px; }
+    .brand .t2{ font-size:12px; opacity:.9; margin-top:2px; }
 
-    .pills{
+    .chips{
       display:flex;
       gap:10px;
-      align-items:center;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
-    .pill{
-      background:rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.22);
-      padding:8px 10px;
+    .chip{
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.28);
+      color:#fff;
+      padding:8px 12px;
       border-radius:999px;
       font-size:12px;
       white-space:nowrap;
@@ -84,537 +75,405 @@
 
     main{
       max-width:1100px;
-      margin: 22px auto 60px;
-      padding: 0 18px;
+      margin:22px auto 60px;
+      padding:0 18px;
     }
 
-    .panel{
+    .hero{
       background:var(--card);
-      border:1px solid var(--line);
+      border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       padding:18px;
     }
-
-    .panel h2{
-      margin:0 0 4px;
+    .hero h1{
+      margin:0 0 6px;
       font-size:22px;
-      letter-spacing:.2px;
     }
-    .panel .sub{
+    .hero p{
       margin:0 0 14px;
       color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
+      font-size:14px;
+      line-height:1.35;
     }
-
-    .actions{
+    .controls{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      margin: 10px 0 14px;
+      align-items:center;
+      margin-top:10px;
     }
-
-    button{
-      appearance:none;
-      border:0;
-      cursor:pointer;
-      border-radius: 12px;
-      padding:10px 12px;
-      font-weight:700;
-      font-size:13px;
-    }
-    .btn-primary{
-      background:var(--green);
-      color:#fff;
-    }
-    .btn-secondary{
-      background:#eef3f0;
-      color:var(--ink);
-      border:1px solid var(--line);
-    }
-
-    .filters{
-      display:grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap:10px;
-      align-items:end;
-    }
-    .field label{
-      display:block;
-      font-size:12px;
-      color:var(--muted);
-      margin:0 0 6px;
-      font-weight:700;
-    }
-    input, select{
-      width:100%;
-      padding:11px 12px;
-      border-radius: 12px;
-      border:1px solid var(--line);
-      outline:none;
-      font-size:13px;
+    .btn{
+      border:1px solid var(--border);
       background:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+      font-size:13px;
+    }
+    .btn.primary{
+      background:#3e7b65;
+      color:#fff;
+      border-color:#3e7b65;
+    }
+    .field, select{
+      border:1px solid var(--border);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:13px;
+      min-width:220px;
     }
 
-    .list{
-      margin-top:18px;
-      display:flex;
-      flex-direction:column;
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: 1fr;
       gap:14px;
     }
 
-    .group{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
-    }
-    .group-head{
+    .groupTitle{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:10px;
-    }
-    .group-title{
-      font-size:14px;
-      font-weight:900;
-    }
-    .group-count{
-      font-size:12px;
+      margin-top:18px;
       color:var(--muted);
-      background:var(--pill);
-      border:1px solid var(--line);
-      padding:6px 10px;
-      border-radius:999px;
+      font-weight:700;
+      font-size:13px;
     }
 
-    .item{
-      border:1px solid var(--line);
-      border-radius:var(--radius2);
-      padding:12px 12px;
-      background:#fff;
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
       display:flex;
       gap:12px;
-      align-items:flex-start;
     }
-
-    .badge{
-      width:28px;height:28px;
-      border-radius: 10px;
-      background:var(--green);
-      color:#fff;
+    .n{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      background:#e7efeC;
+      color:#234;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-weight:900;
-      font-size:12px;
+      font-weight:800;
       flex:0 0 auto;
     }
-
     .meta{
       display:flex;
       gap:8px;
       flex-wrap:wrap;
       margin-bottom:6px;
     }
-    .tag{
-      font-size:12px;
-      color:var(--green);
+    .pill{
       background:var(--pill);
-      border:1px solid var(--line);
+      border:1px solid #d5e7df;
+      color:#234;
+      font-size:12px;
       padding:4px 10px;
       border-radius:999px;
-      font-weight:800;
+      font-weight:700;
     }
     .title{
-      font-weight:900;
-      margin:0 0 4px;
-      font-size:14px;
-      line-height:1.25;
+      font-weight:800;
+      margin:2px 0 6px;
     }
     .link{
-      margin:0;
-      font-size:12px;
-      color:var(--muted);
-      word-break:break-word;
+      word-break:break-all;
+      color:#0b5;
+      text-decoration:none;
+      font-size:13px;
     }
-    .link a{ color:var(--muted); text-decoration:none; }
-    .link a:hover{ text-decoration:underline; }
+    .link:hover{ text-decoration:underline; }
 
-    .footer{
-      margin-top:16px;
+    .empty{
+      margin-top:18px;
+      padding:16px;
+      border:1px dashed var(--border);
+      border-radius:var(--radius);
+      color:var(--muted);
+      background:#fff;
+    }
+
+    footer{
+      max-width:1100px;
+      margin:16px auto 40px;
+      padding:0 18px;
       color:var(--muted);
       font-size:12px;
       display:flex;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      padding: 0 6px;
-    }
-
-    .error{
-      margin-top:14px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid #ffd0d0;
-      background:#fff3f3;
-      color:#7b1d1d;
-      display:none;
-      white-space:pre-wrap;
-      font-size:12px;
-      line-height:1.35;
-    }
-
-    @media (max-width: 900px){
-      .filters{ grid-template-columns: 1fr; }
-      .brand{ min-width:auto; }
-      .topbar-inner{ justify-content:flex-start; }
-      .pills{ justify-content:flex-start; }
-    }
-
-    @media print{
-      .topbar, .actions, .filters { display:none !important; }
-      body{ background:#fff; }
-      .panel, .group{ box-shadow:none; }
     }
   </style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
+  <header>
+    <div class="topbar">
       <div class="brand">
-        <img src="logo.png" alt="FVS" />
+        <img src="logo.png" alt="FVS-RCP" />
         <div>
-          <h1>FVS-RCP • DEPI</h1>
-          <p>Painel público de links — Editais Abertos (FAPEAM)</p>
+          <div class="t1">FVS-RCP • DEPI</div>
+          <div class="t2">Painel público de links — Editais Abertos (FAPEAM)</div>
         </div>
       </div>
-      <div class="pills">
-        <div class="pill" id="pill-updated">Atualizado: —</div>
-        <div class="pill" id="pill-total">Total: —</div>
-        <div class="pill" id="pill-source">Fonte: —</div>
+
+      <div class="chips">
+        <div class="chip" id="chip-updated">Atualizado: —</div>
+        <div class="chip" id="chip-total">Total: —</div>
+        <div class="chip" id="chip-source">Fonte: —</div>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="panel">
-      <h2>Editais Abertos — FAPEAM</h2>
-      <p class="sub">
-        Use busca e filtros para localizar rapidamente por <b>data</b>, <b>área</b> e <b>tipo</b>.
+    <section class="hero">
+      <h1>Editais Abertos — FAPEAM</h1>
+      <p>
+        Use busca e filtros para localizar rapidamente por <b>título/link</b>, <b>área</b> e <b>tipo</b>.
         No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.
       </p>
 
-      <div class="actions">
-        <button class="btn-primary" id="btn-copy">Copiar tudo</button>
-        <button class="btn-secondary" id="btn-print">Imprimir / Salvar PDF</button>
-        <button class="btn-secondary" id="btn-clear">Limpar filtros</button>
-      </div>
+      <div class="controls">
+        <button class="btn primary" id="btn-copy">Copiar tudo</button>
+        <button class="btn" id="btn-print">Imprimir / Salvar PDF</button>
+        <button class="btn" id="btn-clear">Limpar filtros</button>
 
-      <div class="filters">
-        <div class="field">
-          <label>Busca (título ou link)</label>
-          <input id="q" placeholder="Ex.: iniciação, interior, pesquisa, edital 002..." />
-        </div>
-        <div class="field">
-          <label>Área</label>
-          <select id="area"></select>
-        </div>
-        <div class="field">
-          <label>Tipo</label>
-          <select id="tipo"></select>
-        </div>
-        <div class="field">
-          <label>Ordenação</label>
-          <select id="sort">
-            <option value="date_desc">Data (mais recente)</option>
-            <option value="date_asc">Data (mais antiga)</option>
-            <option value="title_asc">Título (A–Z)</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="error" id="err"></div>
-
-      <div class="list" id="list"></div>
-
-      <div class="footer">
-        <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
-        <div id="foot-source">Fonte: —</div>
+        <input class="field" id="q" placeholder="Busca (título ou link)" />
+        <select id="area"></select>
+        <select id="tipo"></select>
+        <select id="ord">
+          <option value="recent">Data (mais recente)</option>
+          <option value="az">Título (A–Z)</option>
+        </select>
       </div>
     </section>
+
+    <div id="content"></div>
+
+    <div class="empty" id="msg" style="display:none;"></div>
   </main>
 
-  <script>
-    // ✅ Fonte do JSON: RAW do GitHub (mais estável que /data.json no Pages)
-    const DATA_URL = "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json";
+  <footer>
+    <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
+    <div id="footer-src">Fonte: —</div>
+  </footer>
 
-    const $ = (id) => document.getElementById(id);
+<script>
+/**
+ * IMPORTANTE:
+ * - Para NÃO depender do /data.json do GitHub Pages, usamos CDN do GitHub.
+ * - Isso evita “página em branco” quando o fetch relativo quebra.
+ */
+const DATA_URL_BASE = "https://cdn.jsdelivr.net/gh/walterolivafvs/Editais-Abertos-FAPEAM-@main/data.json";
 
-    const state = {
-      items: [],
-      updated_at: null,
-      source: null
-    };
+function todayBR(iso){
+  if(!iso) return "—";
+  // aceita yyyy-mm-dd
+  const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(!m) return iso;
+  return `${m[3]}/${m[2]}/${m[1]}`;
+}
 
-    function showError(msg){
-      const box = $("err");
-      box.style.display = "block";
-      box.textContent =
-        "ERRO ao carregar dados.\n\n" +
-        msg + "\n\n" +
-        "Verifique:\n" +
-        "1) Se o arquivo data.json existe no repositório (root)\n" +
-        "2) Se o link RAW abre no navegador\n" +
-        "3) Se o GitHub Pages está publicado a partir do branch main /(root)\n";
+function uniq(arr){ return [...new Set(arr)].filter(Boolean).sort((a,b)=>a.localeCompare(b, "pt-BR")); }
+
+let RAW = null;
+let ITEMS = [];
+
+function normalize(data){
+  const items = Array.isArray(data.items) ? data.items : [];
+  return items.map(it => ({
+    title: it.title || "(sem título)",
+    url: it.url || "",
+    area: it.area || "Geral",
+    type: it.type || "Edital",
+    date: it.date || "" // pode ser vazio mesmo
+  }));
+}
+
+function buildSelect(el, values, labelAll){
+  el.innerHTML = "";
+  const opt0 = document.createElement("option");
+  opt0.value = "";
+  opt0.textContent = labelAll;
+  el.appendChild(opt0);
+
+  for(const v of values){
+    const op = document.createElement("option");
+    op.value = v;
+    op.textContent = v;
+    el.appendChild(op);
+  }
+}
+
+function getFiltered(){
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const area = document.getElementById("area").value;
+  const tipo = document.getElementById("tipo").value;
+  const ord = document.getElementById("ord").value;
+
+  let out = ITEMS.filter(it => {
+    if(area && it.area !== area) return false;
+    if(tipo && it.type !== tipo) return false;
+    if(q){
+      const hay = (it.title + " " + it.url).toLowerCase();
+      if(!hay.includes(q)) return false;
     }
+    return true;
+  });
 
-    function hideError(){
-      const box = $("err");
-      box.style.display = "none";
-      box.textContent = "";
-    }
-
-    function formatBR(yyyy_mm_dd){
-      if(!yyyy_mm_dd) return "Sem data";
-      const parts = String(yyyy_mm_dd).split("-");
-      if(parts.length !== 3) return "Sem data";
-      return `${parts[2]}/${parts[1]}/${parts[0]}`;
-    }
-
-    function safeText(v){
-      return (v === null || v === undefined) ? "" : String(v);
-    }
-
-    function uniqueSorted(arr){
-      return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
-    }
-
-    function normalizeItems(raw){
-      const list = (raw.items || []).map(it => ({
-        titulo: safeText(it.title || it.titulo || "(sem título)"),
-        url: safeText(it.url || ""),
-        data: safeText(it.date || it.data || ""), // no teu padrão atual, date é "YYYY-MM-DD" (ou vazio)
-        area: safeText(it.area || "Geral"),
-        tipo: safeText(it.type || it.tipo || "Edital")
-      }));
-      return list.filter(x => x.url);
-    }
-
-    function fillSelect(sel, values){
-      sel.innerHTML = "";
-      const optAll = document.createElement("option");
-      optAll.value = "";
-      optAll.textContent = "Todas";
-      sel.appendChild(optAll);
-
-      for(const v of values){
-        const op = document.createElement("option");
-        op.value = v;
-        op.textContent = v;
-        sel.appendChild(op);
-      }
-    }
-
-    function applyFilters(){
-      const q = $("q").value.trim().toLowerCase();
-      const area = $("area").value;
-      const tipo = $("tipo").value;
-      const sort = $("sort").value;
-
-      let arr = [...state.items];
-
-      if(q){
-        arr = arr.filter(x =>
-          x.titulo.toLowerCase().includes(q) ||
-          x.url.toLowerCase().includes(q)
-        );
-      }
-      if(area) arr = arr.filter(x => x.area === area);
-      if(tipo) arr = arr.filter(x => x.tipo === tipo);
-
-      // sort
-      if(sort === "title_asc"){
-        arr.sort((a,b)=>a.titulo.localeCompare(b.titulo,"pt-BR"));
-      } else if(sort === "date_asc"){
-        arr.sort((a,b)=> (a.data||"9999-12-31").localeCompare(b.data||"9999-12-31"));
-      } else {
-        // date_desc default
-        arr.sort((a,b)=> (b.data||"").localeCompare(a.data||""));
-      }
-
-      render(arr);
-      $("pill-total").textContent = `Total: ${arr.length} editais`;
-    }
-
-    function groupByDate(arr){
-      const map = new Map();
-      for(const it of arr){
-        const key = it.data ? `Data: ${formatBR(it.data)}` : "Data: Sem data";
-        if(!map.has(key)) map.set(key, []);
-        map.get(key).push(it);
-      }
-      return map;
-    }
-
-    function render(arr){
-      const list = $("list");
-      list.innerHTML = "";
-
-      const groups = groupByDate(arr);
-      let n = 0;
-
-      for(const [dateLabel, items] of groups){
-        const box = document.createElement("div");
-        box.className = "group";
-
-        const head = document.createElement("div");
-        head.className = "group-head";
-
-        const title = document.createElement("div");
-        title.className = "group-title";
-        title.textContent = dateLabel;
-
-        const count = document.createElement("div");
-        count.className = "group-count";
-        count.textContent = `${items.length} edital(is)`;
-
-        head.appendChild(title);
-        head.appendChild(count);
-        box.appendChild(head);
-
-        for(const it of items){
-          n += 1;
-          const row = document.createElement("div");
-          row.className = "item";
-
-          const badge = document.createElement("div");
-          badge.className = "badge";
-          badge.textContent = String(n);
-
-          const content = document.createElement("div");
-          const meta = document.createElement("div");
-          meta.className = "meta";
-
-          const tagA = document.createElement("div");
-          tagA.className = "tag";
-          tagA.textContent = it.area || "Geral";
-
-          const tagT = document.createElement("div");
-          tagT.className = "tag";
-          tagT.textContent = it.tipo || "Edital";
-
-          meta.appendChild(tagA);
-          meta.appendChild(tagT);
-
-          const h = document.createElement("p");
-          h.className = "title";
-          h.textContent = it.titulo || "(sem título)";
-
-          const p = document.createElement("p");
-          p.className = "link";
-          const a = document.createElement("a");
-          a.href = it.url;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.textContent = it.url;
-          p.appendChild(a);
-
-          content.appendChild(meta);
-          content.appendChild(h);
-          content.appendChild(p);
-
-          row.appendChild(badge);
-          row.appendChild(content);
-          box.appendChild(row);
-        }
-
-        list.appendChild(box);
-      }
-
-      if(arr.length === 0){
-        const empty = document.createElement("div");
-        empty.className = "group";
-        empty.innerHTML = "<b>Nenhum resultado</b><div style='margin-top:6px;color:#61727a;font-size:12px'>Ajuste os filtros.</div>";
-        list.appendChild(empty);
-      }
-    }
-
-    async function load(){
-      hideError();
-      try{
-        const res = await fetch(DATA_URL, { cache: "no-store" });
-        if(!res.ok) throw new Error("HTTP " + res.status);
-
-        const raw = await res.json();
-
-        state.updated_at = raw.updated_at || null;
-        state.source = raw.source || null;
-        state.items = normalizeItems(raw);
-
-        // pills
-        $("pill-updated").textContent = "Atualizado: " + (state.updated_at ? formatBR(state.updated_at) : "—");
-        $("pill-total").textContent = `Total: ${state.items.length} editais`;
-        $("pill-source").textContent = "Fonte: site da FAPEAM";
-        $("foot-source").textContent = "Fonte: " + (state.source || "manual");
-
-        // filtros
-        const areas = uniqueSorted(state.items.map(x=>x.area || "Geral"));
-        const tipos = uniqueSorted(state.items.map(x=>x.tipo || "Edital"));
-        fillSelect($("area"), areas);
-        fillSelect($("tipo"), tipos);
-
-        applyFilters();
-
-      }catch(e){
-        showError(String(e));
-      }
-    }
-
-    // ações
-    $("btn-print").addEventListener("click", ()=>window.print());
-
-    $("btn-clear").addEventListener("click", ()=>{
-      $("q").value = "";
-      $("area").value = "";
-      $("tipo").value = "";
-      $("sort").value = "date_desc";
-      applyFilters();
+  if(ord === "az"){
+    out.sort((a,b)=>a.title.localeCompare(b.title, "pt-BR"));
+  }else{
+    // “mais recente”: tenta ordenar por date (yyyy-mm-dd) e joga vazios pro fim
+    out.sort((a,b)=>{
+      const da = a.date || "";
+      const db = b.date || "";
+      if(da && db) return db.localeCompare(da);
+      if(da && !db) return -1;
+      if(!da && db) return 1;
+      return a.title.localeCompare(b.title, "pt-BR");
     });
+  }
+  return out;
+}
 
-    $("btn-copy").addEventListener("click", async ()=>{
-      const visibleLinks = [];
-      const groups = $("list").querySelectorAll(".item a");
-      groups.forEach(a=>visibleLinks.push(a.href));
+function render(){
+  const container = document.getElementById("content");
+  const msg = document.getElementById("msg");
+  container.innerHTML = "";
+  msg.style.display = "none";
 
-      const text = visibleLinks.join("\n");
-      try{
-        await navigator.clipboard.writeText(text);
-        alert("Links copiados (" + visibleLinks.length + ").");
-      }catch{
-        // fallback
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        ta.remove();
-        alert("Links copiados (" + visibleLinks.length + ").");
-      }
-    });
+  const list = getFiltered();
+  document.getElementById("chip-total").textContent = `Total: ${list.length} editais`;
 
-    // filtros em tempo real
-    ["q","area","tipo","sort"].forEach(id=>{
-      $(id).addEventListener("input", applyFilters);
-      $(id).addEventListener("change", applyFilters);
-    });
+  if(list.length === 0){
+    msg.textContent = "Nenhum resultado com os filtros atuais.";
+    msg.style.display = "block";
+    return;
+  }
 
-    load();
-  </script>
+  const grid = document.createElement("div");
+  grid.className = "grid";
+
+  list.forEach((it, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const n = document.createElement("div");
+    n.className = "n";
+    n.textContent = String(i+1);
+
+    const right = document.createElement("div");
+    const meta = document.createElement("div");
+    meta.className = "meta";
+
+    const pArea = document.createElement("span");
+    pArea.className = "pill";
+    pArea.textContent = it.area;
+
+    const pType = document.createElement("span");
+    pType.className = "pill";
+    pType.textContent = it.type;
+
+    meta.appendChild(pArea);
+    meta.appendChild(pType);
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = it.title;
+
+    const a = document.createElement("a");
+    a.className = "link";
+    a.href = it.url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = it.url;
+
+    right.appendChild(meta);
+    right.appendChild(title);
+    right.appendChild(a);
+
+    card.appendChild(n);
+    card.appendChild(right);
+
+    grid.appendChild(card);
+  });
+
+  container.appendChild(grid);
+}
+
+async function load(){
+  try{
+    // cache-bust para evitar “ficar preso” em versão antiga
+    const url = DATA_URL_BASE + "?v=" + Date.now();
+
+    const res = await fetch(url, { cache:"no-store" });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+
+    RAW = await res.json();
+    ITEMS = normalize(RAW);
+
+    // chips
+    document.getElementById("chip-updated").textContent = "Atualizado: " + todayBR(RAW.updated_at || "");
+    document.getElementById("chip-total").textContent = `Total: ${ITEMS.length} editais`;
+    document.getElementById("chip-source").textContent = "Fonte: site da FAPEAM";
+
+    const src = RAW.source ? RAW.source : "—";
+    document.getElementById("footer-src").textContent = "Fonte: " + src;
+
+    // selects
+    buildSelect(document.getElementById("area"), uniq(ITEMS.map(x=>x.area)), "Área (todas)");
+    buildSelect(document.getElementById("tipo"), uniq(ITEMS.map(x=>x.type)), "Tipo (todos)");
+
+    render();
+  }catch(err){
+    const msg = document.getElementById("msg");
+    msg.style.display = "block";
+    msg.textContent =
+      "Falha ao carregar os dados. " +
+      "Isso normalmente acontece quando o link do JSON não está acessível.\n\n" +
+      "Detalhe: " + (err && err.message ? err.message : String(err));
+  }
+}
+
+// botões
+document.getElementById("btn-copy").addEventListener("click", async () => {
+  const list = getFiltered().map(x => x.url).filter(Boolean);
+  const text = list.join("\n");
+  try{
+    await navigator.clipboard.writeText(text);
+    alert("Copiado! (" + list.length + " links)");
+  }catch{
+    // fallback simples
+    prompt("Copie os links:", text);
+  }
+});
+
+document.getElementById("btn-print").addEventListener("click", () => window.print());
+
+document.getElementById("btn-clear").addEventListener("click", () => {
+  document.getElementById("q").value = "";
+  document.getElementById("area").value = "";
+  document.getElementById("tipo").value = "";
+  document.getElementById("ord").value = "recent";
+  render();
+});
+
+["q","area","tipo","ord"].forEach(id => {
+  document.getElementById(id).addEventListener("input", render);
+  document.getElementById(id).addEventListener("change", render);
+});
+
+// start
+load();
+</script>
 </body>
 </html>
