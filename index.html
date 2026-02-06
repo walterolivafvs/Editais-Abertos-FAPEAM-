@@ -434,10 +434,42 @@ function uniqueSorted(arr){
    CARREGAR data.json
 ============================ */
 async function carregarDados(){
-  const res = await fetch(DATA_URL, { cache: "no-store" });
-  if(!res.ok) throw new Error("Falha ao carregar data.json (HTTP " + res.status + ")");
+  const urls = [
+    new URL("data.json", window.location.href).toString(),
+    "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json"
+  ];
 
-  const data = await res.json();
+  let lastErr = null;
+
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+      const data = await res.json();
+
+      // Atualização e fonte (para pills/rodapé)
+      const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
+      DATA_ATUALIZACAO_TEXTO = updated;
+      FONTE_URL = data.source || FONTE_URL;
+
+      // Converte items -> formato do painel
+      EDITAIS = (data.items || []).map(it => ({
+        titulo: it.title || "(sem título)",
+        url: it.url || "#",
+        data: it.date || "",
+        area: it.area || "Geral",
+        tipo: it.type || "Edital"
+      }));
+
+      return; // ✅ deu certo, sai da função
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+
+  throw new Error("Falha ao carregar data.json (Pages e RAW). Último erro: " + (lastErr?.message || lastErr));
+}
 
   // Atualização e fonte (para pills/rodapé)
   const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
