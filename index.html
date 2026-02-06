@@ -1,220 +1,664 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Editais Abertos — FAPEAM</title>
+  <title>Editais Abertos – FAPEAM | FVS-RCP (DEPI)</title>
+
   <style>
     :root{
-      --bg:#f4f6f6; --card:#fff; --text:#1f2937; --muted:#6b7280;
-      --brand:#4b6b5f; --chip:#e9f0ec; --border:#e5e7eb;
-      --btn:#4b6b5f; --btn2:#e9f0ec;
+      /* Identidade (verde musgo institucional – não escuro) */
+      --brand: #5f8f7a;
+      --brand-2: #4a7262;
+      --brand-soft: #eaf4ef;
+
+      /* UI */
+      --bg: #f4f7f6;
+      --card: #ffffff;
+      --text: #15202b;
+      --muted: #5b6773;
+      --border: #d7e6df;
+
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --radius: 14px;
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--text);background:var(--bg)}
-    header{background:var(--brand);color:#fff;padding:14px 18px}
-    header .row{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-    header .title{display:flex;gap:10px;align-items:center}
-    header .badge{background:rgba(255,255,255,.18);padding:6px 10px;border-radius:999px;font-size:12px}
-    main{max-width:980px;margin:22px auto;padding:0 14px}
-    .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 10px 20px rgba(0,0,0,.04)}
-    h1{margin:0 0 6px 0;font-size:22px}
-    p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 8px}
-    button{border:0;border-radius:10px;padding:10px 12px;font-weight:600;cursor:pointer}
-    .btn{background:var(--btn);color:#fff}
-    .btn2{background:var(--btn2);color:var(--text)}
-    .filters{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:10px;margin-top:10px}
-    input, select{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px}
-    .list{margin-top:16px;display:flex;flex-direction:column;gap:12px}
-    .group{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
-    .grouphead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-    .gtitle{font-weight:800}
-    .count{font-size:12px;color:var(--muted);background:#f3f4f6;border-radius:999px;padding:4px 8px}
-    .item{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);border-radius:14px;padding:12px}
-    .num{width:28px;height:28px;border-radius:999px;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px;flex:0 0 28px}
-    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-    .chip{background:var(--chip);border:1px solid #d7e4dd;color:#2f4a40;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:700}
-    a{color:inherit}
-    .link{color:var(--muted);font-size:13px;word-break:break-all}
-    footer{max-width:980px;margin:18px auto;padding:0 14px;color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    @media (max-width:860px){ .filters{grid-template-columns:1fr 1fr} }
-    @media (max-width:520px){ .filters{grid-template-columns:1fr} }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    /* ===== Topbar ===== */
+    .topbar{
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color:#fff;
+      padding: 18px 0;
+    }
+    .wrap{ max-width: 1100px; margin:0 auto; padding: 0 16px; }
+    .brandRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .brandLeft{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width: 260px;
+    }
+    .logoBox{
+      width:44px; height:44px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.15);
+      display:grid;
+      place-items:center;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.25);
+      position: relative;
+    }
+    .logoBox img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .logoBox svg{
+      position:absolute;
+      inset:0;
+      margin:auto;
+      display:none; /* só aparece se logo.png falhar */
+    }
+
+    .brandText h1{
+      margin:0;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing:.2px;
+    }
+    .brandText p{
+      margin:2px 0 0 0;
+      font-size: 13px;
+      opacity:.92;
+    }
+
+    .brandRight{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pill{
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space:nowrap;
+    }
+
+    /* ===== Page header ===== */
+    .hero{
+      padding: 18px 0 0 0;
+    }
+    .heroCard{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      margin-top: 16px;
+    }
+    .heroTitle{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .heroTitle h2{ margin:0; font-size: 20px; }
+    .heroTitle p{ margin:6px 0 0 0; color: var(--muted); font-size: 13px; }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    button{
+      border:none;
+      cursor:pointer;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .btnPrimary{
+      background: var(--brand);
+      color:#fff;
+    }
+    .btnPrimary:hover{ background: var(--brand-2); }
+    .btnSoft{
+      background: var(--brand-soft);
+      color: var(--brand-2);
+      border: 1px solid var(--border);
+    }
+    .btnSoft:hover{ filter: brightness(0.98); }
+
+    /* ===== Filters ===== */
+    .filters{
+      margin-top: 14px;
+      display:grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 880px){
+      .filters{ grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 520px){
+      .filters{ grid-template-columns: 1fr; }
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    label{
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    input, select{
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+    input:focus, select:focus{
+      border-color: rgba(95,143,122,.6);
+      box-shadow: 0 0 0 3px rgba(95,143,122,.15);
+    }
+
+    /* ===== Sections ===== */
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .section{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sectionHeader{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .sectionHeader h3{
+      margin:0;
+      font-size: 15px;
+      letter-spacing:.2px;
+    }
+    .count{
+      font-size: 12px;
+      color: var(--muted);
+      background: #f7faf8;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    /* ===== Items ===== */
+    .list{
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .item{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      padding: 12px;
+      border-radius: 12px;
+      background: #f9fbfa;
+      border: 1px solid var(--border);
+    }
+    .badge{
+      min-width: 34px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--brand);
+      color:#fff;
+      font-weight: 800;
+      font-size: 12px;
+      text-align:center;
+      margin-top: 1px;
+    }
+    .meta{
+      display:flex;
+      flex-direction:column;
+      gap: 4px;
+      width:100%;
+    }
+    .metaTop{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .tag{
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--brand-2);
+      background: var(--brand-soft);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+    .title{
+      font-weight: 800;
+      margin: 2px 0 0 0;
+      font-size: 13px;
+    }
+    .title a{
+      color: var(--text);
+      text-decoration:none;
+    }
+    .title a:hover{ text-decoration:underline; }
+    .url{
+      font-size: 12px;
+      color: var(--brand-2);
+      word-break: break-word;
+      text-decoration:none;
+    }
+    .url:hover{ text-decoration:underline; }
+
+    /* ===== Footer ===== */
+    .footer{
+      margin: 18px 0 26px 0;
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+    }
+
+    /* Print */
+    @media print{
+      .topbar, .actions, .filters{ display:none !important; }
+      body{ background:#fff; }
+      .section, .heroCard{ box-shadow:none; }
+    }
   </style>
 </head>
+
 <body>
-  <header>
-    <div class="row">
-      <div class="title">
-        <strong>FVS-RCP · DEPI</strong>
-        <span style="opacity:.9;font-size:13px">Painel público de links — Editais (FAPEAM)</span>
-      </div>
-      <div class="row" style="gap:8px">
-        <span class="badge" id="updated">Atualizado: —</span>
-        <span class="badge" id="total">Total: —</span>
-        <span class="badge" id="source">Fonte: —</span>
+
+  <!-- TOPO -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brandRow">
+        <div class="brandLeft">
+          <div class="logoBox" title="Logo FVS-RCP">
+            <img id="logoImg" src="logo.png" alt="FVS-RCP" onerror="document.getElementById('logoSvg').style.display='block'; this.style.display='none';">
+            <svg id="logoSvg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-label="Logo">
+              <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z" stroke="white" stroke-width="1.8" opacity=".95"/>
+              <path d="M8 12h8M8 15h8M8 9h8" stroke="white" stroke-width="1.8" opacity=".95"/>
+            </svg>
+          </div>
+          <div class="brandText">
+            <h1>FVS-RCP · DEPI</h1>
+            <p>Painel público de links — Editais Abertos (FAPEAM)</p>
+          </div>
+        </div>
+
+        <div class="brandRight">
+          <div class="pill" id="pillAtualizacao">Atualizado: --/--/----</div>
+          <div class="pill" id="pillTotal">Total: 0 editais</div>
+          <div class="pill">Fonte: site da FAPEAM</div>
+        </div>
       </div>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <div class="panel">
-      <h1>Editais Abertos — FAPEAM</h1>
-      <p>Modo simples (manual). Lista de links para consulta rápida.</p>
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap">
+      <div class="heroCard">
+        <div class="heroTitle">
+          <div>
+            <h2>Editais Abertos — FAPEAM</h2>
+            <p>Use busca e filtros para localizar rapidamente por <b>data</b>, <b>área</b> e <b>tipo</b>. No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.</p>
+          </div>
+          <div class="actions">
+            <button class="btnPrimary" onclick="copiarTudo()">Copiar tudo</button>
+            <button class="btnSoft" onclick="window.print()">Imprimir / Salvar PDF</button>
+            <button class="btnSoft" onclick="limparFiltros()">Limpar filtros</button>
+          </div>
+        </div>
 
-      <div class="actions">
-        <button class="btn" id="copyAll">Copiar tudo</button>
-        <button class="btn2" id="print">Imprimir / Salvar PDF</button>
-        <button class="btn2" id="reset">Limpar filtros</button>
+        <!-- FILTROS -->
+        <div class="filters">
+          <div class="field">
+            <label for="q">Busca (título ou link)</label>
+            <input id="q" type="text" placeholder="Ex.: iniciação, interior, pesquisa, edital 002..." oninput="render()" />
+          </div>
+
+          <div class="field">
+            <label for="area">Área</label>
+            <select id="area" onchange="render()">
+              <option value="">Todas</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="tipo">Tipo</label>
+            <select id="tipo" onchange="render()">
+              <option value="">Todos</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="ordem">Ordenação</label>
+            <select id="ordem" onchange="render()">
+              <option value="dataDesc">Data (mais recente)</option>
+              <option value="dataAsc">Data (mais antiga)</option>
+              <option value="tituloAsc">Título (A–Z)</option>
+              <option value="areaAsc">Área (A–Z)</option>
+              <option value="tipoAsc">Tipo (A–Z)</option>
+            </select>
+          </div>
+        </div>
+
       </div>
 
-      <div class="filters">
-        <input id="q" placeholder="Busca (título ou link)" />
-        <select id="area"><option value="">Área: Todas</option></select>
-        <select id="type"><option value="">Tipo: Todos</option></select>
-        <select id="sort">
-          <option value="title">Ordenação: Título</option>
-          <option value="none">Ordenação: Nenhuma</option>
-        </select>
-      </div>
+      <!-- RESULTADOS -->
+      <div class="grid" id="saida"></div>
 
-      <div class="list" id="list"></div>
+      <div class="footer">
+        <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
+        <div id="rodapeFonte">Fonte: https://www.fapeam.am.gov.br/editais/</div>
+      </div>
     </div>
-  </main>
-
-  <footer>
-    <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
-    <div id="footSource">Fonte: —</div>
-  </footer>
+  </div>
 
 <script>
-  const $ = (id)=>document.getElementById(id);
+/**
+ * ============================
+ * DADOS (lidos do data.json)
+ * ============================
+ * O arquivo data.json deve estar na mesma pasta do index.html (raiz do repo).
+ */
+const DATA_URL = "./data.json";
 
-  let RAW = [];
-  let META = {updated_at:"", source:""};
+let EDITAIS = [];                 // vai ser preenchido pelo data.json
+let DATA_ATUALIZACAO_TEXTO = "--/--/----";
+let FONTE_URL = "https://www.fapeam.am.gov.br/editais/";
 
-  function uniq(arr){ return [...new Set(arr)].filter(Boolean).sort((a,b)=>a.localeCompare(b)); }
+/* ============================
+   UTILIDADES
+============================ */
+function norm(s){
+  return (s || "").toString().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
 
-  function hydrateFilters(items){
-    const areas = uniq(items.map(x=>x.area||""));
-    const types = uniq(items.map(x=>x.type||""));
+function formatBR(yyyy_mm_dd){
+  if(!yyyy_mm_dd) return "";
+  const [y,m,d] = yyyy_mm_dd.split("-");
+  if(!y || !m || !d) return "";
+  return `${d}/${m}/${y}`;
+}
 
-    $("area").innerHTML = `<option value="">Área: Todas</option>` + areas.map(a=>`<option>${a}</option>`).join("");
-    $("type").innerHTML = `<option value="">Tipo: Todos</option>` + types.map(t=>`<option>${t}</option>`).join("");
+function uniqueSorted(arr){
+  return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+}
+
+/* ============================
+   CARREGAR data.json
+============================ */
+async function carregarDados(){
+  const res = await fetch(DATA_URL, { cache: "no-store" });
+  if(!res.ok) throw new Error("Falha ao carregar data.json (HTTP " + res.status + ")");
+
+  const data = await res.json();
+
+  // Atualização e fonte (para pills/rodapé)
+  const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
+  DATA_ATUALIZACAO_TEXTO = updated;
+  FONTE_URL = data.source || FONTE_URL;
+
+  // Converte items -> formato do painel
+  EDITAIS = (data.items || []).map(it => ({
+    titulo: it.title || "(sem título)",
+    url: it.url || "#",
+    data: it.date || "",
+    area: it.area || "Geral",
+    tipo: it.type || "Edital"
+  }));
+}
+
+/* ============================
+   FILTROS / RENDER
+============================ */
+function preencherSelects(){
+  const areaSel = document.getElementById("area");
+  const tipoSel = document.getElementById("tipo");
+
+  const areas = uniqueSorted(EDITAIS.map(e => e.area).filter(Boolean));
+  const tipos = uniqueSorted(EDITAIS.map(e => e.tipo).filter(Boolean));
+
+  // limpa
+  areaSel.querySelectorAll("option:not(:first-child)").forEach(o=>o.remove());
+  tipoSel.querySelectorAll("option:not(:first-child)").forEach(o=>o.remove());
+
+  areas.forEach(a=>{
+    const op = document.createElement("option");
+    op.value = a;
+    op.textContent = a;
+    areaSel.appendChild(op);
+  });
+
+  tipos.forEach(t=>{
+    const op = document.createElement("option");
+    op.value = t;
+    op.textContent = t;
+    tipoSel.appendChild(op);
+  });
+}
+
+function ordenar(lista, modo){
+  const copy = [...lista];
+  const by = (fn) => copy.sort((a,b)=> fn(a).localeCompare(fn(b),"pt-BR"));
+
+  if(modo==="dataDesc") return copy.sort((a,b)=>(b.data||"").localeCompare(a.data||""));
+  if(modo==="dataAsc") return copy.sort((a,b)=>(a.data||"").localeCompare(b.data||""));
+  if(modo==="tituloAsc") return by(e=>e.titulo||"");
+  if(modo==="areaAsc") return by(e=>e.area||"");
+  if(modo==="tipoAsc") return by(e=>e.tipo||"");
+  return copy;
+}
+
+function filtrar(){
+  const q = norm(document.getElementById("q").value.trim());
+  const area = document.getElementById("area").value;
+  const tipo = document.getElementById("tipo").value;
+
+  return EDITAIS.filter(e=>{
+    const okArea = !area || e.area === area;
+    const okTipo = !tipo || e.tipo === tipo;
+    const hay = norm(`${e.titulo} ${e.url}`);
+    const okQ = !q || hay.includes(q);
+    return okArea && okTipo && okQ;
+  });
+}
+
+/* Agrupa por: Data > Área > Tipo */
+function agrupar(lista){
+  const tree = {};
+  for(const e of lista){
+    const d = e.data || "Sem data";
+    const a = e.area || "Sem área";
+    const t = e.tipo || "Sem tipo";
+    tree[d] ??= {};
+    tree[d][a] ??= {};
+    tree[d][a][t] ??= [];
+    tree[d][a][t].push(e);
   }
+  return tree;
+}
 
-  function normalize(x){
-    return {
-      title: (x.title || "Edital").trim(),
-      url: (x.url || "").trim(),
-      area: (x.area || "Geral").trim(),
-      type: (x.type || "Edital").trim(),
-      date: (x.date || "").trim()
-    };
-  }
+function render(){
+  const saida = document.getElementById("saida");
+  saida.innerHTML = "";
 
-  function filtered(){
-    const q = $("q").value.trim().toLowerCase();
-    const area = $("area").value.trim();
-    const type = $("type").value.trim();
-    let items = RAW.slice();
+  const ordem = document.getElementById("ordem").value;
+  const filtrados = ordenar(filtrar(), ordem);
 
-    if(q){
-      items = items.filter(x =>
-        x.title.toLowerCase().includes(q) || x.url.toLowerCase().includes(q)
-      );
-    }
-    if(area) items = items.filter(x => x.area === area);
-    if(type) items = items.filter(x => x.type === type);
+  // pills
+  document.getElementById("pillAtualizacao").textContent = `Atualizado: ${DATA_ATUALIZACAO_TEXTO}`;
+  document.getElementById("pillTotal").textContent = `Total: ${filtrados.length} editais`;
+  document.getElementById("rodapeFonte").textContent = `Fonte: ${FONTE_URL}`;
 
-    const sort = $("sort").value;
-    if(sort === "title"){
-      items.sort((a,b)=>a.title.localeCompare(b.title));
-    }
-    return items;
-  }
-
-  function render(){
-    const items = filtered();
-    $("total").textContent = `Total: ${items.length} editais`;
-
-    const groupTitle = "Data: Sem data";
-    const htmlItems = items.map((x,i)=>`
-      <div class="item">
-        <div class="num">${i+1}</div>
-        <div style="flex:1">
-          <div class="meta">
-            <span class="chip">${x.area}</span>
-            <span class="chip">${x.type}</span>
-          </div>
-          <div style="font-weight:800">${escapeHtml(x.title)}</div>
-          <div class="link"><a href="${escapeAttr(x.url)}" target="_blank" rel="noopener">${escapeHtml(x.url)}</a></div>
-        </div>
+  if(filtrados.length === 0){
+    const sec = document.createElement("div");
+    sec.className = "section";
+    sec.innerHTML = `
+      <div class="sectionHeader">
+        <h3>Nenhum resultado</h3>
+        <span class="count">0</span>
       </div>
-    `).join("");
+      <p style="color:var(--muted);font-size:13px;margin:6px 0 0 0;">
+        Ajuste os filtros ou tente outra busca.
+      </p>`;
+    saida.appendChild(sec);
+    return;
+  }
 
-    $("list").innerHTML = `
-      <div class="group">
-        <div class="grouphead">
-          <div class="gtitle">${groupTitle}</div>
-          <div class="count">${items.length} edital(is)</div>
-        </div>
-        ${htmlItems || `<div style="color:var(--muted);font-size:14px">Nenhum item encontrado.</div>`}
+  const tree = agrupar(filtrados);
+
+  // ordenar datas
+  const datas = Object.keys(tree).sort((a,b)=> (b||"").localeCompare(a||""));
+
+  let globalIndex = 1;
+
+  for(const d of datas){
+    const sec = document.createElement("div");
+    sec.className = "section";
+
+    const totalData = Object.values(tree[d]).reduce((sum, tiposObj)=>{
+      return sum + Object.values(tiposObj).reduce((s2, arr)=> s2 + arr.length, 0);
+    },0);
+
+    sec.innerHTML = `
+      <div class="sectionHeader">
+        <h3>Data: ${d === "Sem data" ? "Sem data" : formatBR(d)}</h3>
+        <span class="count">${totalData} edital(is)</span>
       </div>
     `;
-  }
 
-  function escapeHtml(s){
-    return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-  function escapeAttr(s){ return escapeHtml(s); }
+    // áreas
+    const areas = Object.keys(tree[d]).sort((a,b)=>a.localeCompare(b,"pt-BR"));
 
-  async function init(){
-    const res = await fetch("./data.json", {cache:"no-store"});
-    const data = await res.json();
+    for(const a of areas){
+      const subHeader = document.createElement("div");
+      subHeader.style.margin = "10px 0 6px 0";  /* <<< corrigido (era ssubHeader) */
+      subHeader.innerHTML = `
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+          <span class="tag">Área: ${a}</span>
+        </div>
+      `;
+      sec.appendChild(subHeader);
 
-    META.updated_at = data.updated_at || "";
-    META.source = data.source || "manual";
-    RAW = (data.items || []).map(normalize);
+      // tipos dentro da área
+      const tipos = Object.keys(tree[d][a]).sort((x,y)=>x.localeCompare(y,"pt-BR"));
 
-    $("updated").textContent = `Atualizado: ${META.updated_at || "—"}`;
-    $("source").textContent = `Fonte: ${META.source}`;
-    $("footSource").textContent = `Fonte: ${META.source}`;
+      for(const t of tipos){
+        const tipoTag = document.createElement("div");
+        tipoTag.innerHTML = `
+          <div style="margin:6px 0 8px 0;">
+            <span class="tag">Tipo: ${t}</span>
+          </div>
+        `;
+        sec.appendChild(tipoTag);
 
-    $("total").textContent = `Total: ${RAW.length} editais`;
+        const list = document.createElement("div");
+        list.className = "list";
 
-    hydrateFilters(RAW);
-    render();
-  }
+        for(const e of tree[d][a][t]){
+          const item = document.createElement("div");
+          item.className = "item";
+          item.innerHTML = `
+            <div class="badge">${globalIndex}</div>
+            <div class="meta">
+              <div class="metaTop">
+                <span class="tag">${formatBR(e.data)}</span>
+                <span class="tag">${e.area}</span>
+                <span class="tag">${e.tipo}</span>
+              </div>
+              <div class="title">
+                <a href="${e.url}" target="_blank" rel="noopener noreferrer">${e.titulo}</a>
+              </div>
+              <a class="url" href="${e.url}" target="_blank" rel="noopener noreferrer">${e.url}</a>
+            </div>
+          `;
+          list.appendChild(item);
+          globalIndex++;
+        }
 
-  $("q").addEventListener("input", render);
-  $("area").addEventListener("change", render);
-  $("type").addEventListener("change", render);
-  $("sort").addEventListener("change", render);
-
-  $("reset").addEventListener("click", ()=>{
-    $("q").value="";
-    $("area").value="";
-    $("type").value="";
-    $("sort").value="title";
-    render();
-  });
-
-  $("print").addEventListener("click", ()=>window.print());
-
-  $("copyAll").addEventListener("click", async ()=>{
-    const items = filtered();
-    const text = items.map(x=>`${x.title}\n${x.url}\n`).join("\n");
-    try{
-      await navigator.clipboard.writeText(text);
-      $("copyAll").textContent = "Copiado!";
-      setTimeout(()=> $("copyAll").textContent="Copiar tudo", 1200);
-    }catch(e){
-      alert("Não foi possível copiar automaticamente. Selecione e copie manualmente.");
+        sec.appendChild(list);
+      }
     }
-  });
 
-  init();
+    saida.appendChild(sec);
+  }
+}
+
+function copiarTudo(){
+  const filtrados = ordenar(filtrar(), document.getElementById("ordem").value);
+  const texto = filtrados.map(e=>e.url).join("\n");
+
+  navigator.clipboard.writeText(texto)
+    .then(()=> alert("Links copiados com sucesso!"))
+    .catch(()=> alert("Não foi possível copiar automaticamente. Tente novamente."));
+}
+
+function limparFiltros(){
+  document.getElementById("q").value = "";
+  document.getElementById("area").value = "";
+  document.getElementById("tipo").value = "";
+  document.getElementById("ordem").value = "dataDesc";
+  render();
+}
+
+/* init (agora é async porque carrega o data.json) */
+(async function init(){
+  try{
+    await carregarDados();
+  }catch(e){
+    console.error(e);
+    alert("Erro ao carregar data.json. Verifique se ele está publicado na raiz do GitHub Pages.");
+  }
+  preencherSelects();
+  render();
+})();
 </script>
+
 </body>
 </html>
