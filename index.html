@@ -405,7 +405,7 @@
  * ============================
  * O arquivo data.json deve estar na mesma pasta do index.html (raiz do repo).
  */
-const DATA_URL = "./data.json";
+const DATA_URL = new URL("data.json", window.location.href).toString();
 
 let EDITAIS = [];                 // vai ser preenchido pelo data.json
 let DATA_ATUALIZACAO_TEXTO = "--/--/----";
