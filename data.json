@@ -1,15 +1,15 @@
 {
+  "updated_at": "2026-02-06",
   "source": "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos",
-  "updated_at": "2026-02-05",
   "items": [
     {
-      "title": "Fundação de Amparo à Pesquisa do Estado do Amazonas – FAPEAM",
+      "title": "Edital (título não detectado)",
       "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0012026-processo-eleitoral-das-camaras-de-assessoramento-cientifico-da-fapeam-bienio-2026-a-2028/",
-      "date": "2026-01-12",
       "area": "Geral",
-      "type": "Programa",
-      "start_date": "",
-      "end_date": ""
+      "type": "Edital",
+      "date": "",
+      "start_date": null,
+      "end_date": null
     }
   ]
 }
