@@ -3,177 +3,253 @@
 
 import json
 import re
+import time
+import unicodedata
 from datetime import datetime
-from urllib.parse import urljoin, urlparse
+from typing import Optional, Tuple, List, Dict
 
 import requests
 from bs4 import BeautifulSoup
 
-# Página “Editais Abertos” (aba)
-SOURCE_URL = "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos"
+# =========================
+# CONFIG
+# =========================
+SEED_FILE = "seed_url.json"
 OUT_JSON = "data.json"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (GitHub Actions) AppleWebKit/537.36 (KHTML, like Gecko) Chrome Safari"
 }
 
-# captura datas no formato 29/01/2026
-DATE_BR_RE = re.compile(r"\b(\d{2}/\d{2}/\d{4})\b")
+TIMEOUT = 60
+SLEEP_BETWEEN = 1.2  # segundos entre requests
 
-# links que parecem ser editais individuais
-# exemplos: /editais/edital-n-o-0092026-.../
-EDITAL_PATH_HINTS = (
-    "/editais/edital",
-    "/editais/edital-no-",
-    "/editais/edital-n-o-",
-    "/editais/edital-n%C2%BA",
-)
 
-# links que NÃO são editais (abas do arquivo)
-EXCLUDE_HINTS = (
-    "?aba=",
-    "/editais/?aba=",
-)
+# =========================
+# HELPERS
+# =========================
+DATE_RE = re.compile(r"(\d{2}/\d{2}/\d{4})")
 
-def fetch_html(url: str, timeout: int = 60) -> str:
-    resp = requests.get(url, headers=HEADERS, timeout=timeout)
-    resp.raise_for_status()
-    return resp.text
+def now_iso_date() -> str:
+    return datetime.utcnow().strftime("%Y-%m-%d")
 
-def is_valid_edital_url(href: str) -> bool:
-    if not href:
-        return False
-    h = href.strip()
-    for bad in EXCLUDE_HINTS:
-        if bad in h:
-            return False
-    return any(good in h for good in EDITAL_PATH_HINTS)
-
-def clean_text(s: str) -> str:
-    return re.sub(r"\s+", " ", (s or "")).strip()
-
-def normalize_url(base: str, href: str) -> str:
-    return urljoin(base, href)
-
-def pick_best_title(anchor: BeautifulSoup) -> str:
+def normalize_text(s: str) -> str:
     """
-    Tenta montar um título confiável:
-    - usa o texto do próprio link
-    - se for curto ou vazio, tenta subir no DOM e capturar um heading próximo
+    Normaliza: lowercase, remove acentos, normaliza espaços.
     """
-    t = clean_text(anchor.get_text(" ", strip=True))
+    if s is None:
+        return ""
+    s = s.strip().lower()
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    s = re.sub(r"\s+", " ", s)
+    return s
 
-    if len(t) >= 12:
-        return t
+def fetch_html(url: str) -> str:
+    r = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+    r.raise_for_status()
+    return r.text
 
-    # tenta achar heading próximo
-    parent = anchor.find_parent()
-    if parent:
-        for tag in ["h1", "h2", "h3", "h4", "strong"]:
-            h = parent.find(tag)
-            if h:
-                ht = clean_text(h.get_text(" ", strip=True))
-                if len(ht) >= 12:
-                    return ht
-
-    # fallback: texto do link mesmo
-    return t if t else "Edital (título não detectado)"
-
-def extract_date_near(anchor: BeautifulSoup) -> str | None:
+def soup_text(soup: BeautifulSoup) -> str:
     """
-    Procura uma data dd/mm/aaaa perto do link (no bloco/cartão do edital).
-    Se não achar, retorna None (e o frontend pode mostrar “Sem data”).
+    Texto do HTML (limpo) para busca por padrões.
     """
-    # tenta no container mais próximo
-    container = anchor.find_parent()
-    text_to_search = ""
-    if container:
-        text_to_search = clean_text(container.get_text(" ", strip=True))
+    text = soup.get_text(separator=" ", strip=True)
+    return text
 
-    m = DATE_BR_RE.search(text_to_search)
-    if m:
-        return m.group(1)
+def find_first_date_near(text: str, keyword_patterns: List[str]) -> Optional[str]:
+    """
+    Procura uma data dd/mm/aaaa "próxima" de uma keyword (tolerante).
+    Estratégia:
+      - normaliza texto
+      - para cada padrão, encontra ocorrência e pega um trecho após
+      - procura primeira data nesse trecho
+    """
+    norm = normalize_text(text)
 
-    # fallback: tenta na página inteira (às vezes a data fica fora do bloco)
-    soup = anchor.find_parent("body")
-    if soup:
-        m2 = DATE_BR_RE.search(clean_text(soup.get_text(" ", strip=True)))
-        if m2:
-            return m2.group(1)
+    for pat in keyword_patterns:
+        # procurar o padrão (normalizado)
+        m = re.search(re.escape(pat), norm)
+        if not m:
+            continue
+        # pega um trecho após o match
+        start = m.end()
+        snippet = norm[start:start + 250]  # janela curta
+        d = DATE_RE.search(snippet)
+        if d:
+            return d.group(1)
 
     return None
 
-def same_domain(url: str, domain: str) -> bool:
-    try:
-        return urlparse(url).netloc.endswith(domain)
-    except Exception:
-        return False
+def extract_title(soup: BeautifulSoup) -> str:
+    """
+    Tenta título por meta og:title, depois h1, depois <title>.
+    """
+    og = soup.find("meta", attrs={"property": "og:title"})
+    if og and og.get("content"):
+        t = og["content"].strip()
+        if t:
+            return t
 
-def scrape_editais_from_page(html: str, base_url: str) -> list[dict]:
-    soup = BeautifulSoup(html, "html.parser")
+    h1 = soup.find("h1")
+    if h1:
+        t = h1.get_text(strip=True)
+        if t:
+            return t
 
-    anchors = soup.find_all("a", href=True)
-    items_by_url: dict[str, dict] = {}
+    if soup.title and soup.title.string:
+        t = soup.title.string.strip()
+        if t:
+            return t
 
-    for a in anchors:
-        href = a.get("href", "")
-        if not is_valid_edital_url(href):
-            continue
+    return "Edital (título não detectado)"
 
-        full = normalize_url(base_url, href)
+def extract_card_date_if_any(soup: BeautifulSoup) -> str:
+    """
+    Muitas páginas de edital exibem a data do post/publicação em algum ponto.
+    Aqui tentamos achar a primeira dd/mm/aaaa em regiões comuns.
+    Se não achar, retorna "" (para manter seu layout atual, que usa date como string).
+    """
+    # tenta em elementos comuns
+    candidates = []
+    for selector in ["time", ".date", ".post-date", ".entry-date", ".elementor-post-date"]:
+        for el in soup.select(selector):
+            candidates.append(el.get_text(" ", strip=True))
 
-        # garante que é do domínio da FAPEAM
-        if not same_domain(full, "fapeam.am.gov.br"):
-            continue
+    # também tenta em texto geral, mas com cautela: pega a primeira data do documento
+    joined = " | ".join(candidates)
+    m = DATE_RE.search(joined)
+    if m:
+        return m.group(1)
 
-        # remove fragmentos
-        full = full.split("#")[0].strip()
+    full = soup_text(soup)
+    m2 = DATE_RE.search(full)
+    if m2:
+        return m2.group(1)
 
-        title = pick_best_title(a)
-        date_br = extract_date_near(a)  # pode ser None
+    return ""
 
-        # Campos "area" e "type": neste passo, mantemos estável (sem forçar)
-        item = {
-            "title": title,
-            "url": full,
-            "area": "Geral",
-            "type": "Edital",
-            "date": date_br or "",          # mantém compatível com seu frontend (“Sem data”)
-            "start_date": None,             # por enquanto: NULL
-            "end_date": None                # por enquanto: NULL
-        }
+def extract_start_end_dates(soup: BeautifulSoup) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Extrai:
+      - start_date: início da submissão
+      - end_date: data limite para submissão
+    Aceita variações:
+      - início das submissões / início da submissão / início do período de submissão...
+      - data limite para submissão das propostas (online/on-line)...
+      - final do período de submissão...
+    Se não achar, retorna None.
+    """
+    text = soup_text(soup)
 
-        items_by_url[full] = item
+    # padrões normalizados (sem acento), para buscar no texto normalizado
+    START_PATTERNS = [
+        "inicio das submissoes",
+        "inicio da submissao",
+        "inicio do periodo de submissao",
+        "inicio do periodo de submissoes",
+        "inicio do periodo de submissao de propostas",
+        "inicio do periodo de submissoes de propostas",
+        "inicio das submissoes das propostas",
+        "inicio de submissao das propostas",
+        "inicio do periodo de submissao de propostas no sigfapeam",
+        "inicio das submissoes das propostas no sigfapeam",
+        "inicio do periodo de submissao no sigfapeam",
+        "inicio das submissoes no sigfapeam",
+        "inicio do periodo de submissao de propostas no sistema",
+        "inicio do periodo de submissao no sistema",
+    ]
 
-    # ordena: primeiro os que têm data (mais recente), depois sem data
-    def sort_key(it: dict):
-        d = it.get("date") or ""
-        if not d:
-            return (1, datetime.min)
-        try:
-            dt = datetime.strptime(d, "%d/%m/%Y")
-            return (0, dt)
-        except Exception:
-            return (1, datetime.min)
+    END_PATTERNS = [
+        "data limite para submissao",
+        "data limite para submissao das propostas",
+        "data limite para submissao das propostas online",
+        "data limite para submissao das propostas on line",
+        "data limite para submissao eletronica",
+        "data limite para submissao eletronica das propostas",
+        "data limite para submissao eletronica das propostas no sigfapeam",
+        "data limite para submissao das propostas no sigfapeam",
+        "data limite para submissao no sigfapeam",
+        "final do periodo de submissao",
+        "final do periodo de submissao de propostas",
+        "encerramento das submissoes",
+        "termino do periodo de submissao",
+    ]
 
-    items = sorted(items_by_url.values(), key=sort_key, reverse=True)
-    return items
+    start_date = find_first_date_near(text, START_PATTERNS)
+    end_date = find_first_date_near(text, END_PATTERNS)
+
+    return (start_date, end_date)
+
+
+# =========================
+# MAIN
+# =========================
+def load_seed_urls() -> List[str]:
+    with open(SEED_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    if not isinstance(data, list):
+        raise ValueError("seed_url.json deve conter uma LISTA de URLs (JSON array).")
+
+    urls = []
+    for u in data:
+        if isinstance(u, str) and u.strip():
+            urls.append(u.strip())
+    return urls
 
 def main():
-    html = fetch_html(SOURCE_URL)
+    urls = load_seed_urls()
 
-    items = scrape_editais_from_page(html, SOURCE_URL)
+    items: List[Dict] = []
+    for idx, url in enumerate(urls, start=1):
+        try:
+            html = fetch_html(url)
+            soup = BeautifulSoup(html, "html.parser")
 
-    payload = {
-        "updated_at": datetime.now().strftime("%Y-%m-%d"),
-        "source": SOURCE_URL,
+            title = extract_title(soup)
+            date_str = extract_card_date_if_any(soup)
+
+            start_date, end_date = extract_start_end_dates(soup)
+
+            item = {
+                "title": title,
+                "url": url,
+                "area": "Geral",
+                "type": "Edital",
+                "date": date_str or "",
+                "start_date": start_date if start_date else None,
+                "end_date": end_date if end_date else None,
+            }
+            items.append(item)
+
+            print(f"[OK] {idx}/{len(urls)} - {title}")
+
+        except Exception as e:
+            print(f"[ERRO] {idx}/{len(urls)} - {url} -> {e}")
+            # mantém o item mesmo se falhar, para não sumir do site
+            items.append({
+                "title": "Edital (título não detectado)",
+                "url": url,
+                "area": "Geral",
+                "type": "Edital",
+                "date": "",
+                "start_date": None,
+                "end_date": None
+            })
+
+        time.sleep(SLEEP_BETWEEN)
+
+    out = {
+        "updated_at": now_iso_date(),
+        "source": "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos",
         "items": items
     }
 
     with open(OUT_JSON, "w", encoding="utf-8") as f:
-        json.dump(payload, f, ensure_ascii=False, indent=2)
+        json.dump(out, f, ensure_ascii=False, indent=2)
 
-    print(f"[OK] Gerado {OUT_JSON} com {len(items)} item(ns).")
+    print(f"\nPronto. Gerado: {OUT_JSON} com {len(items)} itens.")
 
 if __name__ == "__main__":
     main()
