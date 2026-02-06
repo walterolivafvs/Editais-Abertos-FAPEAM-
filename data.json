@@ -1,97 +1,15 @@
 {
-  "updated_at": "2026-02-04",
+  "updated_at": "2026-02-06",
   "source": "https://www.fapeam.am.gov.br/editais/?aba=editais-abertos",
   "items": [
     {
-      "title": "Processo eleitoral das Câmaras de Assessoramento Científico da FAPEAM – Biênio 2026–2028",
+      "title": "Fundação de Amparo à Pesquisa do Estado do Amazonas – FAPEAM",
       "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0012026-processo-eleitoral-das-camaras-de-assessoramento-cientifico-da-fapeam-bienio-2026-a-2028/",
-      "date": "2026-02-04",
-      "area": "Gestão Científica",
-      "type": "Edital"
-    },
-    {
-      "title": "Edital Nº 001/2026",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0012026/",
-      "date": "2026-02-04",
-      "area": "Pesquisa",
-      "type": "Edital"
-    },
-    {
-      "title": "Programa de Apoio à Popularização da Ciência, Tecnologia e Inovação (POP-CTI)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0022026-programa-de-apoio-a-popularizacao-da-ciencia-tecnologia-e-inovacao-pop-cti/",
-      "date": "2026-02-04",
-      "area": "Popularização",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio à Realização de Eventos Científicos e Tecnológicos no Amazonas (PAREV 2026)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0032026-programa-de-apoio-a-realizacao-de-eventos-cientificos-e-tecnologicos-no-estado-do-amazonas-parev-2026-chamadas-i-e-ii/",
-      "date": "2026-02-04",
-      "area": "Eventos",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa Estratégico de Desenvolvimento do Setor Primário Produtivo Amazonense (PROSPAM)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-no-0042026-programa-estrategico-de-desenvolvimento-do-setor-primario-produtivo-amazonense-prospamfapeam/",
-      "date": "2026-02-04",
-      "area": "Desenvolvimento",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio à Manutenção de Equipamentos (PAMEQ)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0052026-programa-de-apoio-a-manutencao-de-equipamentos-pameq/",
-      "date": "2026-02-04",
-      "area": "Infraestrutura",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa Ciência na Escola (PCE)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0062026-programa-ciencia-na-escola-pce/",
-      "date": "2026-02-04",
-      "area": "Educação",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio à Inovação Tecnológica voltada ao Ecoturismo (PAINTER Ecoturismo)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0072026-programa-de-apoio-a-inovacao-tecnologica-voltada-ao-ecoturismo-em-comunidades-do-interior-do-estado-do-amazonas-painter-ecoturismo-fapeam/",
-      "date": "2026-02-04",
-      "area": "Inovação",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio à Pesquisa Integrada para a Qualidade de Vida no Amazonas (PROVIDA-AM)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0082026-programa-de-apoio-a-pesquisa-integrada-para-a-qualidade-de-vida-no-amazonas-provida-am-fapeam/",
-      "date": "2026-02-04",
-      "area": "Pesquisa",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio à Pesquisa Inovadora para Tecnologias Sociais de Baixo Custo",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-n-o-0092026-programa-de-apoio-a-pesquisa-inovadora-para-o-desenvolvimento-e-aplicacao-de-tecnologias-sociais-de-baixo-custo-para-mitigacao-das-desigualdades-no-estado-do-amazonas-soc/",
-      "date": "2026-02-04",
-      "area": "Tecnologias Sociais",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio a Coleções Biológicas e Museus do Estado do Amazonas",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-no-0102026-programa-de-apoio-a-organizacao-restauracao-preservacao-e-divulgacao-de-colecoes-biologicas-e-museus-do-estado-do-amazonas-colecoes-biologicasmuseus/",
-      "date": "2026-02-04",
-      "area": "Patrimônio Científico",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Fixação de Recursos Humanos para o Interior do Estado (PROFIX-RH)",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-no-0112026-programa-de-fixacao-de-recursos-humanos-para-o-interior-do-estado-mestres-e-doutores-por-calha-de-rio-profix-rh-edicao-2026/",
-      "date": "2026-02-04",
-      "area": "Recursos Humanos",
-      "type": "Programa"
-    },
-    {
-      "title": "Programa de Apoio a Startup Deep Tech para Inovação Científica e Tecnológica",
-      "url": "https://www.fapeam.am.gov.br/editais/edital-no-012-2026-programa-de-apoio-a-startup-deep-tech-para-inovacao-cientifica-e-tecnologica-deep-tech-fapeam/",
-      "date": "2026-02-04",
-      "area": "Inovação",
-      "type": "Programa"
+      "area": "Geral",
+      "type": "Edital",
+      "date": "",
+      "start_date": "12/01/2026",
+      "end_date": "12/01/2026"
     }
   ]
 }
