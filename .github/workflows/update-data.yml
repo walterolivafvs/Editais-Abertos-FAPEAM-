@@ -28,7 +28,7 @@ jobs:
 
       - name: Run updater
         run: |
-          python scripts/update_data.py
+          python scripts/scrape_fapeam.py
 
       - name: Commit changes
         run: |
