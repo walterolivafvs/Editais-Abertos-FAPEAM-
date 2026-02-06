@@ -1,63 +1,15 @@
-name: Update data.json (FAPEAM)
+name: Update data.json (FAPEAM) - MANUAL ONLY
 
 on:
   workflow_dispatch: {}
-  schedule:
-    # Toda segunda-feira 09:00 UTC (em Manaus costuma ser 05:00)
-    - cron: "0 9 * * 1"
 
 permissions:
   contents: write
 
-concurrency:
-  group: fapeam-data-update
-  cancel-in-progress: true
-
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
+      - name: Stop here (manual mode)
         run: |
-          python -m pip install --upgrade pip
-          pip install requests beautifulsoup4 pypdf
-
-      - name: Run scraper (with retries)
-        run: |
-          set -e
-          for i in 1 2 3; do
-            python scripts/scrape_fapeam.py && break
-            echo "Tentativa $i falhou. Aguardando..."
-            sleep $((i*20))
-          done
-
-      - name: Commit and push if changed
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -e
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # evita "rejected (fetch first)" se o branch avançou
-          git pull --rebase origin main || true
-
-          git add data.json
-          if git diff --cached --quiet; then
-            echo "Sem mudanças no data.json."
-            exit 0
-          fi
-
-          git commit -m "Atualiza data.json (automático)"
-          git push origin main
+          echo "Automação desativada. O site agora é atualizado manualmente (modo estável)."
