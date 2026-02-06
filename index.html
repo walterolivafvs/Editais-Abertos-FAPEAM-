@@ -1,479 +1,288 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Editais Abertos — FAPEAM</title>
-
   <style>
     :root{
-      --bg:#f6f7f8;
-      --card:#ffffff;
-      --text:#0f172a;
-      --muted:#64748b;
-      --brand:#2f6f57;
-      --pill:#e7f2ee;
-      --border:#e5e7eb;
-      --shadow: 0 10px 25px rgba(15, 23, 42, .08);
-      --radius: 18px;
+      --bg:#f3f5f6; --card:#ffffff; --ink:#16312c; --muted:#6b7b77;
+      --brand:#5f7f73; --btn:#2f6f5f; --btn2:#e9efed; --line:#e5ece9;
+      --pill:#e8f1ee;
     }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:var(--bg);
-      color:var(--text);
-    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
+      background:var(--bg); color:#111; }
     header{
-      background:#5f7f74;
-      color:#fff;
-      padding:18px 18px;
-      position:sticky;
-      top:0;
-      z-index:10;
+      background:var(--brand); color:#fff; padding:14px 18px;
+      display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+      position:sticky; top:0; z-index:10;
     }
-    .topbar{
-      max-width:1100px;
-      margin:0 auto;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 260px;
-    }
-    .brand img{
-      width:44px;
-      height:44px;
-      object-fit:contain;
-      border-radius:12px;
-      background:#fff;
-      padding:6px;
-    }
-    .brand .t1{ font-weight:800; letter-spacing:.2px; }
-    .brand .t2{ font-size:12px; opacity:.9; margin-top:2px; }
-
-    .chips{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .chip{
-      background:rgba(255,255,255,.18);
-      border:1px solid rgba(255,255,255,.28);
-      color:#fff;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-      white-space:nowrap;
-    }
-
-    main{
-      max-width:1100px;
-      margin:22px auto 60px;
-      padding:0 18px;
-    }
-
-    .hero{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
-    }
-    .hero h1{
-      margin:0 0 6px;
-      font-size:22px;
-    }
-    .hero p{
-      margin:0 0 14px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.35;
-    }
-    .controls{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:10px;
-    }
-    .btn{
-      border:1px solid var(--border);
-      background:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-      font-size:13px;
-    }
-    .btn.primary{
-      background:#3e7b65;
-      color:#fff;
-      border-color:#3e7b65;
-    }
-    .field, select{
-      border:1px solid var(--border);
-      background:#fff;
-      padding:10px 12px;
-      border-radius:12px;
-      font-size:13px;
-      min-width:220px;
-    }
-
-    .grid{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-    }
-
-    .groupTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-top:18px;
-      color:var(--muted);
-      font-weight:700;
-      font-size:13px;
-    }
-
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:14px;
-      display:flex;
-      gap:12px;
-    }
-    .n{
-      width:34px;
-      height:34px;
-      border-radius:999px;
-      background:#e7efeC;
-      color:#234;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:800;
+    header .logo{
+      width:40px; height:40px; border-radius:10px; background:#fff;
+      display:flex; align-items:center; justify-content:center; overflow:hidden;
       flex:0 0 auto;
     }
-    .meta{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-bottom:6px;
+    header .logo img{width:100%; height:100%; object-fit:contain}
+    header .titleblock{min-width:220px}
+    header .titleblock .t1{font-weight:700; letter-spacing:.2px}
+    header .titleblock .t2{opacity:.95; font-size:13px}
+    header .chips{margin-left:auto; display:flex; gap:10px; flex-wrap:wrap}
+    .chip{
+      background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.25);
+      padding:8px 10px; border-radius:999px; font-size:13px; white-space:nowrap;
     }
+    main{max-width:980px; margin:26px auto; padding:0 16px;}
+    .panel{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px;}
+    .panel h1{margin:0 0 6px 0; font-size:22px; color:var(--ink)}
+    .panel p{margin:0 0 14px 0; color:var(--muted); font-size:14px; line-height:1.35}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{
+      border:0; border-radius:10px; padding:10px 12px; font-weight:600; cursor:pointer;
+      background:var(--btn); color:#fff;
+    }
+    .btn.secondary{background:var(--btn2); color:var(--ink); border:1px solid var(--line)}
+    input, select{
+      padding:10px 12px; border-radius:10px; border:1px solid var(--line);
+      background:#fff; min-width:180px;
+    }
+    input{flex:1; min-width:220px}
+    .cards{margin-top:16px; display:flex; flex-direction:column; gap:12px}
+    .groupTitle{margin:14px 0 6px; color:var(--muted); font-size:13px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px;
+      box-shadow:0 1px 0 rgba(0,0,0,.02);
+    }
+    .cardTop{display:flex; gap:10px; align-items:flex-start}
+    .num{
+      width:28px; height:28px; border-radius:999px; background:var(--pill);
+      display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--ink);
+      flex:0 0 auto;
+    }
+    .pills{display:flex; gap:8px; flex-wrap:wrap; margin:0 0 6px}
     .pill{
-      background:var(--pill);
-      border:1px solid #d5e7df;
-      color:#234;
-      font-size:12px;
-      padding:4px 10px;
-      border-radius:999px;
-      font-weight:700;
+      display:inline-block; background:var(--pill); color:var(--ink);
+      border:1px solid var(--line); padding:4px 10px; border-radius:999px; font-size:12px;
+      font-weight:600;
     }
-    .title{
-      font-weight:800;
-      margin:2px 0 6px;
+    .card h3{margin:0 0 6px 0; font-size:18px; color:var(--ink)}
+    .link{color:#2f6f5f; word-break:break-all; text-decoration:none}
+    .link:hover{text-decoration:underline}
+    .error{
+      margin-top:14px; padding:12px; border:1px dashed #d9a; border-radius:12px;
+      background:#fff7f8; color:#7a2d39; font-size:14px;
     }
-    .link{
-      word-break:break-all;
-      color:#0b5;
-      text-decoration:none;
-      font-size:13px;
-    }
-    .link:hover{ text-decoration:underline; }
-
-    .empty{
-      margin-top:18px;
-      padding:16px;
-      border:1px dashed var(--border);
-      border-radius:var(--radius);
-      color:var(--muted);
-      background:#fff;
-    }
-
-    footer{
-      max-width:1100px;
-      margin:16px auto 40px;
-      padding:0 18px;
-      color:var(--muted);
-      font-size:12px;
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+    footer{max-width:980px; margin:18px auto 30px; padding:0 16px; color:var(--muted); font-size:13px}
+    .footrow{display:flex; gap:18px; flex-wrap:wrap; justify-content:space-between; border-top:1px solid var(--line); padding-top:14px}
   </style>
 </head>
-
 <body>
   <header>
-    <div class="topbar">
-      <div class="brand">
-        <img src="logo.png" alt="FVS-RCP" />
-        <div>
-          <div class="t1">FVS-RCP • DEPI</div>
-          <div class="t2">Painel público de links — Editais Abertos (FAPEAM)</div>
-        </div>
-      </div>
-
-      <div class="chips">
-        <div class="chip" id="chip-updated">Atualizado: —</div>
-        <div class="chip" id="chip-total">Total: —</div>
-        <div class="chip" id="chip-source">Fonte: —</div>
-      </div>
+    <div class="logo">
+      <img src="logo.png" alt="FVS-RCP">
+    </div>
+    <div class="titleblock">
+      <div class="t1">FVS-RCP • DEPI</div>
+      <div class="t2">Painel público de links — Editais Abertos (FAPEAM)</div>
+    </div>
+    <div class="chips">
+      <div class="chip" id="chipUpdated">Atualizado: —</div>
+      <div class="chip" id="chipTotal">Total: —</div>
+      <div class="chip" id="chipFonte">Fonte: —</div>
     </div>
   </header>
 
   <main>
-    <section class="hero">
+    <div class="panel">
       <h1>Editais Abertos — FAPEAM</h1>
-      <p>
-        Use busca e filtros para localizar rapidamente por <b>título/link</b>, <b>área</b> e <b>tipo</b>.
-        No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.
-      </p>
+      <p>Use busca e filtros para localizar rapidamente por <b>título/link</b>, <b>área</b> e <b>tipo</b>. No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.</p>
 
-      <div class="controls">
-        <button class="btn primary" id="btn-copy">Copiar tudo</button>
-        <button class="btn" id="btn-print">Imprimir / Salvar PDF</button>
-        <button class="btn" id="btn-clear">Limpar filtros</button>
-
-        <input class="field" id="q" placeholder="Busca (título ou link)" />
-        <select id="area"></select>
-        <select id="tipo"></select>
+      <div class="row">
+        <button class="btn" id="btnCopy">Copiar tudo</button>
+        <button class="btn secondary" id="btnPrint">Imprimir / Salvar PDF</button>
+        <button class="btn secondary" id="btnClear">Limpar filtros</button>
+        <input id="q" placeholder="Busca (título ou link)" />
+        <select id="area"><option value="">Área (todas)</option></select>
+        <select id="tipo"><option value="">Tipo (todos)</option></select>
         <select id="ord">
-          <option value="recent">Data (mais recente)</option>
-          <option value="az">Título (A–Z)</option>
+          <option value="date_desc">Data (mais recente)</option>
+          <option value="date_asc">Data (mais antiga)</option>
+          <option value="title_asc">Título (A–Z)</option>
+          <option value="title_desc">Título (Z–A)</option>
         </select>
       </div>
-    </section>
 
-    <div id="content"></div>
-
-    <div class="empty" id="msg" style="display:none;"></div>
+      <div id="err" class="error" style="display:none;"></div>
+      <div class="cards" id="cards"></div>
+    </div>
   </main>
 
   <footer>
-    <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
-    <div id="footer-src">Fonte: —</div>
+    <div class="footrow">
+      <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
+      <div id="footFonte">Fonte: —</div>
+    </div>
   </footer>
 
 <script>
-/**
- * IMPORTANTE:
- * - Para NÃO depender do /data.json do GitHub Pages, usamos CDN do GitHub.
- * - Isso evita “página em branco” quando o fetch relativo quebra.
- */
-const DATA_URL = "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json?nocache=" + Date.now();
+  // URL do JSON SEMPRE relativo ao GitHub Pages (mesma pasta do index.html)
+  const DATA_URL = new URL("data.json", window.location.href).toString();
 
-function todayBR(iso){
-  if(!iso) return "—";
-  // aceita yyyy-mm-dd
-  const m = String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if(!m) return iso;
-  return `${m[3]}/${m[2]}/${m[1]}`;
-}
+  let EDITAIS = [];
+  let FONTE_URL = "";
+  let UPDATED_AT = "";
 
-function uniq(arr){ return [...new Set(arr)].filter(Boolean).sort((a,b)=>a.localeCompare(b, "pt-BR")); }
+  const $ = (id) => document.getElementById(id);
 
-let RAW = null;
-let ITEMS = [];
-
-function normalize(data){
-  const items = Array.isArray(data.items) ? data.items : [];
-  return items.map(it => ({
-    title: it.title || "(sem título)",
-    url: it.url || "",
-    area: it.area || "Geral",
-    type: it.type || "Edital",
-    date: it.date || "" // pode ser vazio mesmo
-  }));
-}
-
-function buildSelect(el, values, labelAll){
-  el.innerHTML = "";
-  const opt0 = document.createElement("option");
-  opt0.value = "";
-  opt0.textContent = labelAll;
-  el.appendChild(opt0);
-
-  for(const v of values){
-    const op = document.createElement("option");
-    op.value = v;
-    op.textContent = v;
-    el.appendChild(op);
+  function formatBR(yyyy_mm_dd){
+    if(!yyyy_mm_dd) return "";
+    const [y,m,d] = (yyyy_mm_dd || "").split("-");
+    if(!y || !m || !d) return "";
+    return `${d}/${m}/${y}`;
   }
-}
 
-function getFiltered(){
-  const q = document.getElementById("q").value.trim().toLowerCase();
-  const area = document.getElementById("area").value;
-  const tipo = document.getElementById("tipo").value;
-  const ord = document.getElementById("ord").value;
+  function uniqueSorted(arr){
+    return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  }
 
-  let out = ITEMS.filter(it => {
-    if(area && it.area !== area) return false;
-    if(tipo && it.type !== tipo) return false;
-    if(q){
-      const hay = (it.title + " " + it.url).toLowerCase();
-      if(!hay.includes(q)) return false;
+  async function carregarDados(){
+    try{
+      // cache-bust forte (evita ficar vendo JSON antigo)
+      const url = DATA_URL + (DATA_URL.includes("?") ? "&" : "?") + "v=" + Date.now();
+      const res = await fetch(url, { cache:"no-store" });
+      if(!res.ok) throw new Error("Falha ao carregar data.json (HTTP " + res.status + ")");
+      const data = await res.json();
+
+      UPDATED_AT = data.updated_at || "";
+      FONTE_URL  = data.source || "";
+
+      // Normaliza itens
+      EDITAIS = (data.items || []).map(it => ({
+        titulo: it.title || "(sem título)",
+        url: it.url || "",
+        data: it.date || "",
+        area: it.area || "Geral",
+        tipo: it.type || "Edital",
+      }));
+
+      // Atualiza chips e rodapé
+      $("chipUpdated").textContent = "Atualizado: " + (UPDATED_AT ? formatBR(UPDATED_AT) : "—");
+      $("chipTotal").textContent   = "Total: " + (EDITAIS.length || 0) + " editais";
+      $("chipFonte").textContent   = "Fonte: " + (FONTE_URL ? "site da FAPEAM" : "—");
+      $("footFonte").textContent   = "Fonte: " + (FONTE_URL || "—");
+
+      // Preenche filtros
+      const areas = uniqueSorted(EDITAIS.map(x=>x.area));
+      const tipos = uniqueSorted(EDITAIS.map(x=>x.tipo));
+
+      const selArea = $("area");
+      const selTipo = $("tipo");
+      selArea.innerHTML = `<option value="">Área (todas)</option>` + areas.map(a=>`<option>${a}</option>`).join("");
+      selTipo.innerHTML = `<option value="">Tipo (todos)</option>` + tipos.map(t=>`<option>${t}</option>`).join("");
+
+      $("err").style.display = "none";
+      render();
+    } catch(e){
+      $("err").style.display = "block";
+      $("err").textContent = "Falha ao carregar os dados. Isso normalmente acontece quando o link do JSON não está acessível. Detalhe: " + e.message;
+      // Ainda tenta renderizar o que tiver
+      render();
     }
-    return true;
-  });
+  }
 
-  if(ord === "az"){
-    out.sort((a,b)=>a.title.localeCompare(b.title, "pt-BR"));
-  }else{
-    // “mais recente”: tenta ordenar por date (yyyy-mm-dd) e joga vazios pro fim
-    out.sort((a,b)=>{
-      const da = a.date || "";
-      const db = b.date || "";
-      if(da && db) return db.localeCompare(da);
-      if(da && !db) return -1;
-      if(!da && db) return 1;
-      return a.title.localeCompare(b.title, "pt-BR");
+  function getFiltered(){
+    const q = ($("q").value || "").trim().toLowerCase();
+    const area = $("area").value || "";
+    const tipo = $("tipo").value || "";
+
+    let arr = EDITAIS.slice();
+
+    if(q){
+      arr = arr.filter(x =>
+        (x.titulo || "").toLowerCase().includes(q) ||
+        (x.url || "").toLowerCase().includes(q)
+      );
+    }
+    if(area) arr = arr.filter(x => x.area === area);
+    if(tipo) arr = arr.filter(x => x.tipo === tipo);
+
+    const ord = $("ord").value;
+    if(ord === "date_desc"){
+      arr.sort((a,b)=>(b.data||"").localeCompare(a.data||""));
+    } else if(ord === "date_asc"){
+      arr.sort((a,b)=>(a.data||"").localeCompare(b.data||""));
+    } else if(ord === "title_asc"){
+      arr.sort((a,b)=>(a.titulo||"").localeCompare(b.titulo||"","pt-BR"));
+    } else if(ord === "title_desc"){
+      arr.sort((a,b)=>(b.titulo||"").localeCompare(a.titulo||"","pt-BR"));
+    }
+    return arr;
+  }
+
+  function render(){
+    const wrap = $("cards");
+    const arr = getFiltered();
+
+    $("chipTotal").textContent = "Total: " + (arr.length || 0) + " editais";
+
+    if(!arr.length){
+      wrap.innerHTML = `<div class="card"><div class="pills"><span class="pill">Sem resultados</span></div><h3>Nenhum edital encontrado</h3></div>`;
+      return;
+    }
+
+    wrap.innerHTML = arr.map((x, i) => `
+      <div class="card">
+        <div class="cardTop">
+          <div class="num">${i+1}</div>
+          <div style="width:100%">
+            <div class="pills">
+              <span class="pill">${x.area}</span>
+              <span class="pill">${x.tipo}</span>
+              ${x.data ? `<span class="pill">${formatBR(x.data)}</span>` : ``}
+            </div>
+            <h3>${escapeHtml(x.titulo)}</h3>
+            <a class="link" href="${escapeAttr(x.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(x.url)}</a>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  function escapeHtml(s){
+    return (s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function escapeAttr(s){
+    return (s||"").replace(/"/g,"&quot;");
+  }
+
+  // Botões
+  $("btnCopy").addEventListener("click", ()=>{
+    const arr = getFiltered();
+    const txt = arr.map(x => `${x.titulo}\n${x.url}\n`).join("\n");
+    navigator.clipboard.writeText(txt).then(()=>{
+      $("btnCopy").textContent = "Copiado!";
+      setTimeout(()=> $("btnCopy").textContent = "Copiar tudo", 900);
+    }).catch(()=>{
+      alert("Não consegui copiar automaticamente. Selecione e copie manualmente.");
     });
-  }
-  return out;
-}
-
-function render(){
-  const container = document.getElementById("content");
-  const msg = document.getElementById("msg");
-  container.innerHTML = "";
-  msg.style.display = "none";
-
-  const list = getFiltered();
-  document.getElementById("chip-total").textContent = `Total: ${list.length} editais`;
-
-  if(list.length === 0){
-    msg.textContent = "Nenhum resultado com os filtros atuais.";
-    msg.style.display = "block";
-    return;
-  }
-
-  const grid = document.createElement("div");
-  grid.className = "grid";
-
-  list.forEach((it, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
-
-    const n = document.createElement("div");
-    n.className = "n";
-    n.textContent = String(i+1);
-
-    const right = document.createElement("div");
-    const meta = document.createElement("div");
-    meta.className = "meta";
-
-    const pArea = document.createElement("span");
-    pArea.className = "pill";
-    pArea.textContent = it.area;
-
-    const pType = document.createElement("span");
-    pType.className = "pill";
-    pType.textContent = it.type;
-
-    meta.appendChild(pArea);
-    meta.appendChild(pType);
-
-    const title = document.createElement("div");
-    title.className = "title";
-    title.textContent = it.title;
-
-    const a = document.createElement("a");
-    a.className = "link";
-    a.href = it.url;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    a.textContent = it.url;
-
-    right.appendChild(meta);
-    right.appendChild(title);
-    right.appendChild(a);
-
-    card.appendChild(n);
-    card.appendChild(right);
-
-    grid.appendChild(card);
   });
 
-  container.appendChild(grid);
-}
+  $("btnPrint").addEventListener("click", ()=> window.print());
 
-async function load(){
-  try{
-    // cache-bust para evitar “ficar preso” em versão antiga
-    const url = DATA_URL_BASE + "?v=" + Date.now();
-
-    const res = await fetch(url, { cache:"no-store" });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-
-    RAW = await res.json();
-    ITEMS = normalize(RAW);
-
-    // chips
-    document.getElementById("chip-updated").textContent = "Atualizado: " + todayBR(RAW.updated_at || "");
-    document.getElementById("chip-total").textContent = `Total: ${ITEMS.length} editais`;
-    document.getElementById("chip-source").textContent = "Fonte: site da FAPEAM";
-
-    const src = RAW.source ? RAW.source : "—";
-    document.getElementById("footer-src").textContent = "Fonte: " + src;
-
-    // selects
-    buildSelect(document.getElementById("area"), uniq(ITEMS.map(x=>x.area)), "Área (todas)");
-    buildSelect(document.getElementById("tipo"), uniq(ITEMS.map(x=>x.type)), "Tipo (todos)");
-
+  $("btnClear").addEventListener("click", ()=>{
+    $("q").value = "";
+    $("area").value = "";
+    $("tipo").value = "";
+    $("ord").value = "date_desc";
     render();
-  }catch(err){
-    const msg = document.getElementById("msg");
-    msg.style.display = "block";
-    msg.textContent =
-      "Falha ao carregar os dados. " +
-      "Isso normalmente acontece quando o link do JSON não está acessível.\n\n" +
-      "Detalhe: " + (err && err.message ? err.message : String(err));
-  }
-}
+  });
 
-// botões
-document.getElementById("btn-copy").addEventListener("click", async () => {
-  const list = getFiltered().map(x => x.url).filter(Boolean);
-  const text = list.join("\n");
-  try{
-    await navigator.clipboard.writeText(text);
-    alert("Copiado! (" + list.length + " links)");
-  }catch{
-    // fallback simples
-    prompt("Copie os links:", text);
-  }
-});
+  ["q","area","tipo","ord"].forEach(id=>{
+    $(id).addEventListener("input", render);
+    $(id).addEventListener("change", render);
+  });
 
-document.getElementById("btn-print").addEventListener("click", () => window.print());
-
-document.getElementById("btn-clear").addEventListener("click", () => {
-  document.getElementById("q").value = "";
-  document.getElementById("area").value = "";
-  document.getElementById("tipo").value = "";
-  document.getElementById("ord").value = "recent";
-  render();
-});
-
-["q","area","tipo","ord"].forEach(id => {
-  document.getElementById(id).addEventListener("input", render);
-  document.getElementById(id).addEventListener("change", render);
-});
-
-// start
-load();
+  carregarDados();
 </script>
 </body>
 </html>
