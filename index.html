@@ -1,459 +1,306 @@
-<!doctype html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Editais Abertos – FAPEAM | FVS-RCP (DEPI)</title>
-
+  <title>Editais Abertos — FAPEAM</title>
   <style>
     :root{
-      /* Identidade (verde musgo institucional – não escuro) */
-      --brand: #5f8f7a;
-      --brand-2: #4a7262;
-      --brand-soft: #eaf4ef;
-
-      /* UI */
-      --bg: #f4f7f6;
-      --card: #ffffff;
-      --text: #15202b;
-      --muted: #5b6773;
-      --border: #d7e6df;
-
-      --shadow: 0 10px 30px rgba(0,0,0,.06);
-      --radius: 14px;
+      --bg:#f4f6f7;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --green:#4f6f63;
+      --green2:#2f4d44;
+      --border:#e5e7eb;
+      --pill:#e8f0ee;
     }
-
-    *{ box-sizing:border-box; }
+    *{box-sizing:border-box}
     body{
       margin:0;
-      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.45;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
     }
-
-    /* ===== Topbar ===== */
-    .topbar{
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+    header{
+      background:var(--green);
       color:#fff;
-      padding: 18px 0;
+      padding:16px 0;
+      box-shadow:0 2px 10px rgba(0,0,0,.08);
     }
-    .wrap{ max-width: 1100px; margin:0 auto; padding: 0 16px; }
-    .brandRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
+    .wrap{max-width:980px;margin:0 auto;padding:0 18px;}
+    .topbar{
+      display:flex;align-items:center;gap:14px;flex-wrap:wrap;
     }
-    .brandLeft{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width: 260px;
-    }
-    .logoBox{
-      width:44px; height:44px;
-      border-radius: 10px;
-      background: rgba(255,255,255,.15);
-      display:grid;
-      place-items:center;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.25);
-      position: relative;
-    }
-    .logoBox img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    .logoBox svg{
-      position:absolute;
-      inset:0;
-      margin:auto;
-      display:none; /* só aparece se logo.png falhar */
-    }
-
-    .brandText h1{
-      margin:0;
-      font-size: 18px;
-      font-weight: 800;
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      font-weight:700;
       letter-spacing:.2px;
     }
-    .brandText p{
-      margin:2px 0 0 0;
-      font-size: 13px;
-      opacity:.92;
-    }
-
-    .brandRight{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .pill{
-      background: rgba(255,255,255,.15);
-      border: 1px solid rgba(255,255,255,.25);
-      padding: 8px 10px;
-      border-radius: 999px;
-      font-size: 12px;
+    .brand img{height:34px;width:auto;border-radius:6px;background:#fff;padding:4px}
+    .chips{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+    .chip{
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.22);
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;
       white-space:nowrap;
     }
 
-    /* ===== Page header ===== */
-    .hero{
-      padding: 18px 0 0 0;
+    main{padding:22px 0 32px}
+    .panel{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05);
     }
-    .heroCard{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 18px;
-      margin-top: 16px;
-    }
-    .heroTitle{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .heroTitle h2{ margin:0; font-size: 20px; }
-    .heroTitle p{ margin:6px 0 0 0; color: var(--muted); font-size: 13px; }
-
+    h1{font-size:22px;margin:0 0 6px}
+    p{margin:0 0 12px;color:var(--muted);font-size:14px;line-height:1.45}
     .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
+      display:flex;gap:10px;flex-wrap:wrap;margin:10px 0 14px;
     }
     button{
-      border:none;
+      border:1px solid var(--border);
+      background:#fff;
+      padding:9px 12px;border-radius:10px;
       cursor:pointer;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-weight: 700;
-      font-size: 13px;
+      font-weight:600;
+      font-size:13px;
     }
-    .btnPrimary{
-      background: var(--brand);
+    button.primary{
+      background:var(--green);
+      border-color:var(--green);
       color:#fff;
     }
-    .btnPrimary:hover{ background: var(--brand-2); }
-    .btnSoft{
-      background: var(--brand-soft);
-      color: var(--brand-2);
-      border: 1px solid var(--border);
-    }
-    .btnSoft:hover{ filter: brightness(0.98); }
-
-    /* ===== Filters ===== */
+    button:hover{filter:brightness(.98)}
     .filters{
-      margin-top: 14px;
       display:grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 10px;
-    }
-    @media (max-width: 880px){
-      .filters{ grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 520px){
-      .filters{ grid-template-columns: 1fr; }
-    }
-
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-    }
-    label{
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 700;
+      grid-template-columns: 1.2fr .7fr .7fr .8fr;
+      gap:10px;
     }
     input, select{
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #fff;
-      font-size: 13px;
-      outline: none;
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:10px 12px;
+      font-size:13px;
+      background:#fff;
     }
-    input:focus, select:focus{
-      border-color: rgba(95,143,122,.6);
-      box-shadow: 0 0 0 3px rgba(95,143,122,.15);
-    }
-
-    /* ===== Sections ===== */
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .section{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 14px;
-    }
-    .sectionHeader{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom: 10px;
-    }
-    .sectionHeader h3{
-      margin:0;
-      font-size: 15px;
-      letter-spacing:.2px;
-    }
-    .count{
-      font-size: 12px;
-      color: var(--muted);
-      background: #f7faf8;
-      border: 1px solid var(--border);
-      padding: 6px 10px;
-      border-radius: 999px;
-    }
-
-    /* ===== Items ===== */
-    .list{
+    .cards{
+      margin-top:18px;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap:14px;
     }
-    .item{
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-      padding: 12px;
-      border-radius: 12px;
-      background: #f9fbfa;
-      border: 1px solid var(--border);
+    .group{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      box-shadow:0 6px 18px rgba(0,0,0,.04);
+    }
+    .grouphead{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+      font-weight:800;
     }
     .badge{
-      min-width: 34px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: var(--brand);
+      font-size:12px;
+      background:var(--pill);
+      border:1px solid #d6e3df;
+      color:var(--green2);
+      padding:4px 10px;
+      border-radius:999px;
+      font-weight:700;
+    }
+    .count{
+      margin-left:auto;
+      font-size:12px;color:var(--muted);
+      border:1px solid var(--border);
+      background:#fff;
+      padding:4px 10px;border-radius:999px;
+    }
+    .item{
+      margin-top:12px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+      display:grid;
+      grid-template-columns: 36px 1fr;
+      gap:10px;
+      align-items:start;
+    }
+    .n{
+      width:34px;height:34px;
+      border-radius:999px;
+      background:var(--green);
       color:#fff;
-      font-weight: 800;
-      font-size: 12px;
-      text-align:center;
-      margin-top: 1px;
+      display:flex;align-items:center;justify-content:center;
+      font-weight:800;
     }
-    .meta{
-      display:flex;
-      flex-direction:column;
-      gap: 4px;
-      width:100%;
+    .meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+    .pill{
+      font-size:12px;
+      padding:4px 10px;border-radius:999px;
+      background:var(--pill);
+      border:1px solid #d6e3df;
+      color:var(--green2);
+      font-weight:700;
     }
-    .metaTop{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .tag{
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--brand-2);
-      background: var(--brand-soft);
-      border: 1px solid var(--border);
-      padding: 4px 8px;
-      border-radius: 999px;
-    }
-    .title{
-      font-weight: 800;
-      margin: 2px 0 0 0;
-      font-size: 13px;
-    }
-    .title a{
-      color: var(--text);
-      text-decoration:none;
-    }
-    .title a:hover{ text-decoration:underline; }
-    .url{
-      font-size: 12px;
-      color: var(--brand-2);
-      word-break: break-word;
-      text-decoration:none;
-    }
-    .url:hover{ text-decoration:underline; }
+    a{color:#1f4fd6;text-decoration:none;word-break:break-word}
+    a:hover{text-decoration:underline}
 
-    /* ===== Footer ===== */
-    .footer{
-      margin: 18px 0 26px 0;
-      color: var(--muted);
-      font-size: 12px;
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
+    footer{
+      padding:18px 0 24px;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .foot{
+      display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
     }
 
-    /* Print */
-    @media print{
-      .topbar, .actions, .filters{ display:none !important; }
-      body{ background:#fff; }
-      .section, .heroCard{ box-shadow:none; }
+    /* erro visível */
+    #erro{
+      display:none;
+      max-width:980px;
+      margin:16px auto;
+      padding:12px 14px;
+      border:1px solid #f5c2c7;
+      border-radius:10px;
+      background:#f8d7da;
+      color:#842029;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     }
   </style>
 </head>
 
 <body>
-
-  <!-- TOPO -->
-  <div class="topbar">
-    <div class="wrap">
-      <div class="brandRow">
-        <div class="brandLeft">
-          <div class="logoBox" title="Logo FVS-RCP">
-            <img id="logoImg" src="logo.png" alt="FVS-RCP" onerror="document.getElementById('logoSvg').style.display='block'; this.style.display='none';">
-            <svg id="logoSvg" width="28" height="28" viewBox="0 0 24 24" fill="none" aria-label="Logo">
-              <path d="M12 2l9 5v10l-9 5-9-5V7l9-5Z" stroke="white" stroke-width="1.8" opacity=".95"/>
-              <path d="M8 12h8M8 15h8M8 9h8" stroke="white" stroke-width="1.8" opacity=".95"/>
-            </svg>
-          </div>
-          <div class="brandText">
-            <h1>FVS-RCP · DEPI</h1>
-            <p>Painel público de links — Editais Abertos (FAPEAM)</p>
-          </div>
-        </div>
-
-        <div class="brandRight">
-          <div class="pill" id="pillAtualizacao">Atualizado: --/--/----</div>
-          <div class="pill" id="pillTotal">Total: 0 editais</div>
-          <div class="pill">Fonte: site da FAPEAM</div>
-        </div>
-      </div>
-    </div>
+  <div id="erro">
+    <strong>Erro:</strong> <span id="erro_msg"></span>
   </div>
 
-  <!-- HERO -->
-  <div class="hero">
+  <header>
     <div class="wrap">
-      <div class="heroCard">
-        <div class="heroTitle">
+      <div class="topbar">
+        <div class="brand">
+          <img src="logo.png" alt="FVS-RCP" />
           <div>
-            <h2>Editais Abertos — FAPEAM</h2>
-            <p>Use busca e filtros para localizar rapidamente por <b>data</b>, <b>área</b> e <b>tipo</b>. No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.</p>
-          </div>
-          <div class="actions">
-            <button class="btnPrimary" onclick="copiarTudo()">Copiar tudo</button>
-            <button class="btnSoft" onclick="window.print()">Imprimir / Salvar PDF</button>
-            <button class="btnSoft" onclick="limparFiltros()">Limpar filtros</button>
+            <div>FVS-RCP · DEPI</div>
+            <div style="font-weight:600;font-size:12px;opacity:.9">Painel público de links — Editais Abertos (FAPEAM)</div>
           </div>
         </div>
-
-        <!-- FILTROS -->
-        <div class="filters">
-          <div class="field">
-            <label for="q">Busca (título ou link)</label>
-            <input id="q" type="text" placeholder="Ex.: iniciação, interior, pesquisa, edital 002..." oninput="render()" />
-          </div>
-
-          <div class="field">
-            <label for="area">Área</label>
-            <select id="area" onchange="render()">
-              <option value="">Todas</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="tipo">Tipo</label>
-            <select id="tipo" onchange="render()">
-              <option value="">Todos</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="ordem">Ordenação</label>
-            <select id="ordem" onchange="render()">
-              <option value="dataDesc">Data (mais recente)</option>
-              <option value="dataAsc">Data (mais antiga)</option>
-              <option value="tituloAsc">Título (A–Z)</option>
-              <option value="areaAsc">Área (A–Z)</option>
-              <option value="tipoAsc">Tipo (A–Z)</option>
-            </select>
-          </div>
+        <div class="chips">
+          <div class="chip">Atualizado: <span id="chip_updated">--/--/----</span></div>
+          <div class="chip">Total: <span id="chip_total">0</span> editais</div>
+          <div class="chip">Fonte: <span id="chip_source">manual</span></div>
         </div>
-
-      </div>
-
-      <!-- RESULTADOS -->
-      <div class="grid" id="saida"></div>
-
-      <div class="footer">
-        <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
-        <div id="rodapeFonte">Fonte: https://www.fapeam.am.gov.br/editais/</div>
       </div>
     </div>
-  </div>
+  </header>
 
-<script>
-/**
- * ============================
- * DADOS (lidos do data.json)
- * ============================
- * O arquivo data.json deve estar na mesma pasta do index.html (raiz do repo).
- */
-const DATA_URL = "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json";
+  <main>
+    <div class="wrap">
+      <div class="panel">
+        <h1>Editais Abertos — FAPEAM</h1>
+        <p>Use busca e filtros para localizar rapidamente por <b>data</b>, <b>área</b> e <b>tipo</b>. No botão “Copiar tudo”, você copia a lista de links para WhatsApp/E-mail.</p>
 
-let EDITAIS = [];                 // vai ser preenchido pelo data.json
-let DATA_ATUALIZACAO_TEXTO = "--/--/----";
-let FONTE_URL = "https://www.fapeam.am.gov.br/editais/";
+        <div class="actions">
+          <button class="primary" id="btn_copy">Copiar tudo</button>
+          <button id="btn_print">Imprimir / Salvar PDF</button>
+          <button id="btn_clear">Limpar filtros</button>
+        </div>
 
-/* ============================
-   UTILIDADES
-============================ */
-function norm(s){
-  return (s || "").toString().toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
-}
+        <div class="filters">
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin:0 0 6px;font-weight:700;">Busca (título ou link)</div>
+            <input id="q" placeholder="Ex.: iniciação, interior, pesquisa, edital 002..." />
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin:0 0 6px;font-weight:700;">Área</div>
+            <select id="f_area"><option value="">Todas</option></select>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin:0 0 6px;font-weight:700;">Tipo</div>
+            <select id="f_tipo"><option value="">Todos</option></select>
+          </div>
+          <div>
+            <div style="font-size:12px;color:var(--muted);margin:0 0 6px;font-weight:700;">Ordenação</div>
+            <select id="f_sort">
+              <option value="date_desc">Data (mais recente)</option>
+              <option value="date_asc">Data (mais antiga)</option>
+              <option value="title_asc">Título (A–Z)</option>
+              <option value="area_asc">Área (A–Z)</option>
+              <option value="tipo_asc">Tipo (A–Z)</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
-function formatBR(yyyy_mm_dd){
-  if(!yyyy_mm_dd) return "";
-  const [y,m,d] = yyyy_mm_dd.split("-");
-  if(!y || !m || !d) return "";
-  return `${d}/${m}/${y}`;
-}
+      <div class="cards" id="cards"></div>
 
-function uniqueSorted(arr){
-  return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
-}
+      <footer>
+        <div class="wrap">
+          <div class="foot">
+            <div>Documento público (GitHub Pages) — FVS-RCP/DEPI</div>
+            <div>Fonte: <span id="foot_source">manual</span></div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
 
-/* ============================
-   CARREGAR data.json
-============================ */
-async function carregarDados(){
-  const urls = [
-    new URL("data.json", window.location.href).toString(),
-    "https://raw.githubusercontent.com/walterolivafvs/Editais-Abertos-FAPEAM-/main/data.json"
-  ];
+  <script>
+    // ✅ URL robusta do data.json no GitHub Pages
+    const BASE_PATH = window.location.pathname.endsWith("/")
+      ? window.location.pathname
+      : window.location.pathname.replace(/\/[^\/]*$/, "/");
+    const DATA_URL = `${window.location.origin}${BASE_PATH}data.json`;
 
-  let lastErr = null;
+    let EDITAIS = [];
+    let DATA_ATUALIZACAO_TEXTO = "--/--/----";
+    let FONTE_URL = "manual";
 
-  for (const url of urls) {
-    try {
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const elCards = document.getElementById("cards");
+    const elChipUpdated = document.getElementById("chip_updated");
+    const elChipTotal = document.getElementById("chip_total");
+    const elChipSource = document.getElementById("chip_source");
+    const elFootSource = document.getElementById("foot_source");
+
+    const elQ = document.getElementById("q");
+    const elArea = document.getElementById("f_area");
+    const elTipo = document.getElementById("f_tipo");
+    const elSort = document.getElementById("f_sort");
+
+    function formatBR(yyyy_mm_dd){
+      if(!yyyy_mm_dd) return "";
+      const [y,m,d] = yyyy_mm_dd.split("-");
+      if(!y || !m || !d) return "";
+      return `${d}/${m}/${y}`;
+    }
+
+    function uniqueSorted(arr){
+      return [...new Set(arr)].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+    }
+
+    async function carregarDados(){
+      const res = await fetch(DATA_URL, { cache: "no-store" });
+      const ct = res.headers.get("content-type") || "";
+
+      if(!res.ok) throw new Error(`Falha ao carregar data.json (HTTP ${res.status})`);
+
+      // Se o GitHub Pages devolver HTML por engano (404/redirect), isso pega e mostra.
+      if(!ct.includes("application/json") && !ct.includes("text/json")){
+        const preview = (await res.text()).slice(0,120).replace(/\s+/g," ");
+        throw new Error(`data.json não retornou JSON (Content-Type: ${ct || "desconhecido"}). Prévia: ${preview}`);
+      }
 
       const data = await res.json();
 
-      // Atualização e fonte (para pills/rodapé)
       const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
       DATA_ATUALIZACAO_TEXTO = updated;
-      FONTE_URL = data.source || FONTE_URL;
+      FONTE_URL = data.source || "manual";
 
-      // Converte items -> formato do painel
       EDITAIS = (data.items || []).map(it => ({
         titulo: it.title || "(sem título)",
         url: it.url || "#",
@@ -462,235 +309,143 @@ async function carregarDados(){
         tipo: it.type || "Edital"
       }));
 
-      return; // ✅ deu certo, sai da função
-    } catch (e) {
-      lastErr = e;
+      elChipUpdated.textContent = DATA_ATUALIZACAO_TEXTO;
+      elChipTotal.textContent = String(EDITAIS.length);
+      elChipSource.textContent = "site da FAPEAM";
+      elFootSource.textContent = FONTE_URL;
+
+      popularFiltros();
+      render();
     }
-  }
 
-  throw new Error("Falha ao carregar data.json (Pages e RAW). Último erro: " + (lastErr?.message || lastErr));
-}
+    function popularFiltros(){
+      const areas = uniqueSorted(EDITAIS.map(e=>e.area));
+      const tipos = uniqueSorted(EDITAIS.map(e=>e.tipo));
 
-  // Atualização e fonte (para pills/rodapé)
-  const updated = data.updated_at ? formatBR(data.updated_at) : "--/--/----";
-  DATA_ATUALIZACAO_TEXTO = updated;
-  FONTE_URL = data.source || FONTE_URL;
+      elArea.innerHTML = `<option value="">Todas</option>` + areas.map(a=>`<option>${a}</option>`).join("");
+      elTipo.innerHTML = `<option value="">Todos</option>` + tipos.map(t=>`<option>${t}</option>`).join("");
+    }
 
-  // Converte items -> formato do painel
-  EDITAIS = (data.items || []).map(it => ({
-    titulo: it.title || "(sem título)",
-    url: it.url || "#",
-    data: it.date || "",
-    area: it.area || "Geral",
-    tipo: it.type || "Edital"
-  }));
-}
+    function getFiltrados(){
+      const q = (elQ.value||"").trim().toLowerCase();
+      const fa = elArea.value;
+      const ft = elTipo.value;
 
-/* ============================
-   FILTROS / RENDER
-============================ */
-function preencherSelects(){
-  const areaSel = document.getElementById("area");
-  const tipoSel = document.getElementById("tipo");
+      let list = EDITAIS.filter(e=>{
+        if(fa && e.area !== fa) return false;
+        if(ft && e.tipo !== ft) return false;
+        if(q){
+          const hay = `${e.titulo} ${e.url}`.toLowerCase();
+          if(!hay.includes(q)) return false;
+        }
+        return true;
+      });
 
-  const areas = uniqueSorted(EDITAIS.map(e => e.area).filter(Boolean));
-  const tipos = uniqueSorted(EDITAIS.map(e => e.tipo).filter(Boolean));
+      const sort = elSort.value;
+      if(sort==="date_desc"){
+        list.sort((a,b)=>(b.data||"").localeCompare(a.data||""));
+      } else if(sort==="date_asc"){
+        list.sort((a,b)=>(a.data||"").localeCompare(b.data||""));
+      } else if(sort==="title_asc"){
+        list.sort((a,b)=>a.titulo.localeCompare(b.titulo,"pt-BR"));
+      } else if(sort==="area_asc"){
+        list.sort((a,b)=>a.area.localeCompare(b.area,"pt-BR"));
+      } else if(sort==="tipo_asc"){
+        list.sort((a,b)=>a.tipo.localeCompare(b.tipo,"pt-BR"));
+      }
+      return list;
+    }
 
-  // limpa
-  areaSel.querySelectorAll("option:not(:first-child)").forEach(o=>o.remove());
-  tipoSel.querySelectorAll("option:not(:first-child)").forEach(o=>o.remove());
+    function groupByDate(list){
+      const map = new Map();
+      for(const e of list){
+        const key = e.data ? formatBR(e.data) : "Sem data";
+        if(!map.has(key)) map.set(key, []);
+        map.get(key).push(e);
+      }
+      return map;
+    }
 
-  areas.forEach(a=>{
-    const op = document.createElement("option");
-    op.value = a;
-    op.textContent = a;
-    areaSel.appendChild(op);
-  });
+    function render(){
+      const list = getFiltrados();
+      const groups = groupByDate(list);
 
-  tipos.forEach(t=>{
-    const op = document.createElement("option");
-    op.value = t;
-    op.textContent = t;
-    tipoSel.appendChild(op);
-  });
-}
+      elChipTotal.textContent = String(list.length);
 
-function ordenar(lista, modo){
-  const copy = [...lista];
-  const by = (fn) => copy.sort((a,b)=> fn(a).localeCompare(fn(b),"pt-BR"));
+      elCards.innerHTML = "";
+      for(const [dateLabel, items] of groups){
+        const group = document.createElement("div");
+        group.className = "group";
 
-  if(modo==="dataDesc") return copy.sort((a,b)=>(b.data||"").localeCompare(a.data||""));
-  if(modo==="dataAsc") return copy.sort((a,b)=>(a.data||"").localeCompare(b.data||""));
-  if(modo==="tituloAsc") return by(e=>e.titulo||"");
-  if(modo==="areaAsc") return by(e=>e.area||"");
-  if(modo==="tipoAsc") return by(e=>e.tipo||"");
-  return copy;
-}
-
-function filtrar(){
-  const q = norm(document.getElementById("q").value.trim());
-  const area = document.getElementById("area").value;
-  const tipo = document.getElementById("tipo").value;
-
-  return EDITAIS.filter(e=>{
-    const okArea = !area || e.area === area;
-    const okTipo = !tipo || e.tipo === tipo;
-    const hay = norm(`${e.titulo} ${e.url}`);
-    const okQ = !q || hay.includes(q);
-    return okArea && okTipo && okQ;
-  });
-}
-
-/* Agrupa por: Data > Área > Tipo */
-function agrupar(lista){
-  const tree = {};
-  for(const e of lista){
-    const d = e.data || "Sem data";
-    const a = e.area || "Sem área";
-    const t = e.tipo || "Sem tipo";
-    tree[d] ??= {};
-    tree[d][a] ??= {};
-    tree[d][a][t] ??= [];
-    tree[d][a][t].push(e);
-  }
-  return tree;
-}
-
-function render(){
-  const saida = document.getElementById("saida");
-  saida.innerHTML = "";
-
-  const ordem = document.getElementById("ordem").value;
-  const filtrados = ordenar(filtrar(), ordem);
-
-  // pills
-  document.getElementById("pillAtualizacao").textContent = `Atualizado: ${DATA_ATUALIZACAO_TEXTO}`;
-  document.getElementById("pillTotal").textContent = `Total: ${filtrados.length} editais`;
-  document.getElementById("rodapeFonte").textContent = `Fonte: ${FONTE_URL}`;
-
-  if(filtrados.length === 0){
-    const sec = document.createElement("div");
-    sec.className = "section";
-    sec.innerHTML = `
-      <div class="sectionHeader">
-        <h3>Nenhum resultado</h3>
-        <span class="count">0</span>
-      </div>
-      <p style="color:var(--muted);font-size:13px;margin:6px 0 0 0;">
-        Ajuste os filtros ou tente outra busca.
-      </p>`;
-    saida.appendChild(sec);
-    return;
-  }
-
-  const tree = agrupar(filtrados);
-
-  // ordenar datas
-  const datas = Object.keys(tree).sort((a,b)=> (b||"").localeCompare(a||""));
-
-  let globalIndex = 1;
-
-  for(const d of datas){
-    const sec = document.createElement("div");
-    sec.className = "section";
-
-    const totalData = Object.values(tree[d]).reduce((sum, tiposObj)=>{
-      return sum + Object.values(tiposObj).reduce((s2, arr)=> s2 + arr.length, 0);
-    },0);
-
-    sec.innerHTML = `
-      <div class="sectionHeader">
-        <h3>Data: ${d === "Sem data" ? "Sem data" : formatBR(d)}</h3>
-        <span class="count">${totalData} edital(is)</span>
-      </div>
-    `;
-
-    // áreas
-    const areas = Object.keys(tree[d]).sort((a,b)=>a.localeCompare(b,"pt-BR"));
-
-    for(const a of areas){
-      const subHeader = document.createElement("div");
-      subHeader.style.margin = "10px 0 6px 0";  /* <<< corrigido (era ssubHeader) */
-      subHeader.innerHTML = `
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-          <span class="tag">Área: ${a}</span>
-        </div>
-      `;
-      sec.appendChild(subHeader);
-
-      // tipos dentro da área
-      const tipos = Object.keys(tree[d][a]).sort((x,y)=>x.localeCompare(y,"pt-BR"));
-
-      for(const t of tipos){
-        const tipoTag = document.createElement("div");
-        tipoTag.innerHTML = `
-          <div style="margin:6px 0 8px 0;">
-            <span class="tag">Tipo: ${t}</span>
-          </div>
+        const head = document.createElement("div");
+        head.className = "grouphead";
+        head.innerHTML = `
+          <div>Data: ${dateLabel}</div>
+          <div class="count">${items.length} edital(is)</div>
         `;
-        sec.appendChild(tipoTag);
+        group.appendChild(head);
 
-        const list = document.createElement("div");
-        list.className = "list";
+        const first = items[0];
+        const pills = document.createElement("div");
+        pills.className = "meta";
+        pills.style.marginTop = "10px";
+        pills.innerHTML = `
+          <span class="pill">Área: ${first.area}</span>
+          <span class="pill">Tipo: ${first.tipo}</span>
+        `;
+        group.appendChild(pills);
 
-        for(const e of tree[d][a][t]){
-          const item = document.createElement("div");
-          item.className = "item";
-          item.innerHTML = `
-            <div class="badge">${globalIndex}</div>
-            <div class="meta">
-              <div class="metaTop">
-                <span class="tag">${formatBR(e.data)}</span>
-                <span class="tag">${e.area}</span>
-                <span class="tag">${e.tipo}</span>
-              </div>
-              <div class="title">
-                <a href="${e.url}" target="_blank" rel="noopener noreferrer">${e.titulo}</a>
-              </div>
-              <a class="url" href="${e.url}" target="_blank" rel="noopener noreferrer">${e.url}</a>
+        items.forEach((it, idx)=>{
+          const card = document.createElement("div");
+          card.className = "item";
+          card.innerHTML = `
+            <div class="n">${idx+1}</div>
+            <div>
+              <div style="font-weight:800;margin-bottom:4px">${it.titulo}</div>
+              <div><a href="${it.url}" target="_blank" rel="noopener noreferrer">${it.url}</a></div>
             </div>
           `;
-          list.appendChild(item);
-          globalIndex++;
-        }
+          group.appendChild(card);
+        });
 
-        sec.appendChild(list);
+        elCards.appendChild(group);
       }
     }
 
-    saida.appendChild(sec);
-  }
-}
+    function copiarTudo(){
+      const list = getFiltrados();
+      const texto = list.map(e=>`${e.titulo}\n${e.url}`).join("\n\n");
+      navigator.clipboard.writeText(texto).then(()=>{
+        alert("Lista copiada!");
+      }).catch(()=>{
+        alert("Não consegui copiar automaticamente. Selecione e copie manualmente.");
+      });
+    }
 
-function copiarTudo(){
-  const filtrados = ordenar(filtrar(), document.getElementById("ordem").value);
-  const texto = filtrados.map(e=>e.url).join("\n");
+    document.getElementById("btn_copy").addEventListener("click", copiarTudo);
+    document.getElementById("btn_print").addEventListener("click", ()=>window.print());
+    document.getElementById("btn_clear").addEventListener("click", ()=>{
+      elQ.value=""; elArea.value=""; elTipo.value=""; elSort.value="date_desc";
+      render();
+    });
 
-  navigator.clipboard.writeText(texto)
-    .then(()=> alert("Links copiados com sucesso!"))
-    .catch(()=> alert("Não foi possível copiar automaticamente. Tente novamente."));
-}
+    [elQ, elArea, elTipo, elSort].forEach(el=>el.addEventListener("input", render));
+    [elArea, elTipo, elSort].forEach(el=>el.addEventListener("change", render));
 
-function limparFiltros(){
-  document.getElementById("q").value = "";
-  document.getElementById("area").value = "";
-  document.getElementById("tipo").value = "";
-  document.getElementById("ordem").value = "dataDesc";
-  render();
-}
-
-/* init (agora é async porque carrega o data.json) */
-(async function init(){
-  try{
-    await carregarDados();
-  }catch(e){
-    console.error(e);
-    alert("Erro ao carregar data.json. Verifique se ele está publicado na raiz do GitHub Pages.");
-  }
-  preencherSelects();
-  render();
-})();
-</script>
-
+    window.addEventListener("DOMContentLoaded", async ()=>{
+      try{
+        await carregarDados();
+      } catch(e){
+        console.error(e);
+        const box = document.getElementById("erro");
+        const msg = document.getElementById("erro_msg");
+        if(box && msg){
+          msg.textContent = String(e && e.message ? e.message : e);
+          box.style.display = "block";
+        }
+        alert("Erro ao carregar data.json. Veja a mensagem em vermelho no topo da página.");
+      }
+    });
+  </script>
 </body>
 </html>
