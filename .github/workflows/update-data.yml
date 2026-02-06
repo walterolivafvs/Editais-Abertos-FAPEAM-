@@ -1,15 +1,14 @@
-name: Update data.json (FAPEAM) - MANUAL ONLY
+name: (DESATIVADO) Update data.json (FAPEAM)
 
 on:
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  update:
+  disabled:
     runs-on: ubuntu-latest
     steps:
-      - name: Stop here (manual mode)
-        run: |
-          echo "Automação desativada. O site agora é atualizado manualmente (modo estável)."
+      - name: Disabled
+        run: echo "Workflow desativado. Atualização do site é manual."
